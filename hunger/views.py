@@ -6,11 +6,7 @@ from hunger.models import Restaurant, Food, Nutrition
 # Create your views here.
 def hunger(request):
 	restaurants = list(Restaurant.objects.all())
-	response = "<ul>"
-	for r in restaurants:
-		response += "<li>" + r.name + "</li>"
-	response += "</ul>"
-	return HttpResponse(response)
+	return render_to_response('index.html')
 	
 def restaurant(request, name):
 	#try: 
