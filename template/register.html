@@ -176,9 +176,12 @@
 
   	<form id="signup">
 		<h1>Start doing cool stuff in seconds.</h1>
-		<input type="email" placeholder="Email" required="">
-		<input type="username" placeholder="Username" required="">
-		<input type="password" placeholder="Password" required="">
+		{{ form.email }}
+		{{ form.username }}
+		{{ form.password }}
+		{{ form.password2 }}
+		{{ form.first_name }}
+		{{ form.last_name }}
 		<input type="password" placeholder="Confirm password" required="">					
 		<button type="submit">Click to join Hunger Hunt</button>	
 	</form>
