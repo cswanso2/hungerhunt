@@ -9,8 +9,8 @@ urlpatterns = patterns('',
     # url(r'^$', 'hungerhunt.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 	url(r'^admin/', include(admin.site.urls)),
-	url(r'^home/', hungerViews.hunger),
-	url(r'^restaurant/(?P<name>.+)/', hungerViews.restaurant, name='restaurant'),
+	url(r'^home/', hungerViews.hunger, name='home'),
+	url(r'^home/restaurant/(?P<name>.+)/', hungerViews.restaurant, name='restaurant'),
 )
 urlpatterns += patterns('', (
     r'^static/(?P<path>.*)$',

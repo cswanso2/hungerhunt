@@ -88,16 +88,60 @@
                                             }
                                     });
                             });
-                            </script>
-                        
+                           
+			     
+			    </script>
+			    
+			    
                             <div id="search-bar">
-                                <form id="tfnewsearch" method="get" action="restaurant_list.html">
-                                        <input type="text" id="tfq2b" class="tftextinput2" name="q" size="21" maxlength="120" value="Please enter a restaurant"><input type="submit" value=">" class="tfbutton2">
+                                <form id="tfnewsearch">
+                                        <input type="text" id="tfq2b" method= class="tftextinput2" name="q" size="21" maxlength="120" value="Please enter a restaurant"><input type="submit" id="submit_arrow" value=">" class="tfbutton2">
                                 </form>
                                 <div class="tfclear"></div>
                             </div>
-                    
-
+			    
+			    
+			    <!--
+			    <textarea id='tfq2b' class="tftextinput2" name="q" rows="1" cols="30" style="resize:none">
+				
+			    </textarea>
+				-->
+			    <script>
+				
+				
+				
+				
+				
+				
+				$( "#tfq2b" ).change(function() {
+					console.log('value is......' + $('#tfq2b').val())
+				});
+				
+				
+				$
+				
+				$( "#tfnewsearch" ).submit(function( event ) {
+					
+					
+					$.ajax({
+						url: "{% url 'home' %}",
+						type: 'POST',
+						data:{
+							rest: $('#tfq2b').val()
+						},
+						success: function(data){
+							alert(data)
+						}
+					});
+					
+					
+					val1 = $('#tfq2b').val();
+					
+					window.location.href= 'http://localhost:8000/home/restaurant/mcdoalds';
+					event.preventDefault();
+				});
+				
+			    </script>
                         
                         <ul class="list-inline intro-social-buttons">
                             <li>
