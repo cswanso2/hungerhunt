@@ -11,10 +11,14 @@
     <title>Hunger Hunt</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    {% load static %}
+
+	{% block static %} 
+		<link rel="stylesheet" type="text/css" href="{% static 'hunger\css\bootstrap.css' %}">
+		<link href="{% static 'hunger\css\main_page.css' %}" rel="stylesheet">
+	{% endblock %}
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <!-- Custom CSS -->
-    <link href="../static/css/main_page.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
