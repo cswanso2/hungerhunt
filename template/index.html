@@ -64,72 +64,25 @@
             </div>
             <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container -->
     </nav>
 
     <!-- Header -->
-    <div class="intro-header">
+    <div id='head_page' class="intro-header">
 
         <div class="container">
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
                         <h1>Welcome</h1>
                         <h3>Start by entering a restaurant of your choice</h3>
                         <hr class="intro-divider">
-                        
-               
-                            <script type="text/javascript">
-                            $(function() {
-                                    $("#tfq2b").click(function() {
-                                            if ($("#tfq2b").val() == "Please enter a restaurant"){
-                                                    $("#tfq2b").val(""); 
-                                            }
-                                    });
-                            });
-                           
-			     
-			    </script>
-			    
-			    
                             <div id="search-bar">
                                 <form id="tfnewsearch">
-                                        <input type="text" id="tfq2b" class="tftextinput2" name="q" size="21" maxlength="120" value="Please enter a restaurant"><input id="submit_arrow" type="submit" value=">" class="tfbutton2">
+                                        <input type="text" id="tfq2b" class="tftextinput2" name="q" size="21" maxlength="120" value="Please enter a restaurant"><input id="submit_arrow" type="button" value=">" class="tfbutton2">
                                 </form>
                                 <div class="tfclear"></div>
                             </div>
-			    
-			    
-			    <!--
-			    <textarea id='tfq2b' class="tftextinput2" name="q" rows="1" cols="30" style="resize:none">
-				
-			    </textarea>
-				-->
-			    <script>
-				
-				
-				
-				
-				
-				
-				$( "#tfq2b" ).change(function() {
-					console.log('value is......' + $('#tfq2b').val())
-				});
-				
-				
-				$
-				
-				$( "#tfnewsearch" ).submit(function( event ) {
-					
-					Console.log('asdlfjasl;');
-					val1 = $('#tfq2b').val();
-					val1 = "#" + val1;
-					$('#McDonalds').hide();
-				});
-				
-			    </script>
-                        
+
                         <ul class="list-inline intro-social-buttons">
                             <li>
                                 <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
@@ -143,18 +96,26 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-
+            </div> <!-- row div -->
         </div>
-        <!-- /.container -->
 
     </div>
-    <!-- /.intro-header -->
-
+  
+	
+    
     <!-- Page Content -->
 	
+	
+
 	{% for restaurant, foodNutrition in restaurantFoodNutrition.items %}
-		<div id='{{ restaurant.name }}'>
+		<div hidden id='{{ restaurant.name|lower|cut:" " }}'>
+
+				<div class="col-lg-12">
+					<br>
+					<br>
+					<h2 id='parameter'>{{ restaurant.name }}</h2>
+				</div>
+
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr><th>Name</th><th>price</th><th>calories</th><th>carbs</th><th>sugar</th><th>protein</th><th>fat</th></tr>
@@ -167,6 +128,40 @@
 			<table>
 		</div>
 	{% endfor %}
+	
+	
+	
+				    
+		<script>
+		    $(document).ready(function(){
+			$("#" + '{{ restaurant.name }}').hide();
+		    });
+			
+			
+			
+		    $("#submit_arrow").click(function( event ) {
+			    console.log('it got here')
+			    $("#head_page").hide();
+			    val1 = $('#tfq2b').val().toLowerCase();
+			    val1 = val1.replace(/ /g,'');
+			    console.log(val1)
+			    $("#" + val1).show()
+			    console.log('asdlfjasl;');
+			    
+			    val1 = "#" + val1;
+			    event.preventDefault();
+		    });
+                        $(function() {
+                            $("#tfq2b").click(function() {
+                                if ($("#tfq2b").val() == "Please enter a restaurant"){
+                                    $("#tfq2b").val(""); 
+                                }
+                            });
+                        });
+		</script>
+	
+	
+	
     <!-- Footer -->
     <footer>
         <div class="container">
