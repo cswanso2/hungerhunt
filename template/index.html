@@ -95,7 +95,7 @@
 			    
                             <div id="search-bar">
                                 <form id="tfnewsearch">
-                                        <input type="text" id="tfq2b" method= class="tftextinput2" name="q" size="21" maxlength="120" value="Please enter a restaurant"><input type="submit" id="submit_arrow" value=">" class="tfbutton2">
+                                        <input type="text" id="tfq2b" class="tftextinput2" name="q" size="21" maxlength="120" value="Please enter a restaurant"><input id="submit_arrow" type="submit" value=">" class="tfbutton2">
                                 </form>
                                 <div class="tfclear"></div>
                             </div>
@@ -122,23 +122,10 @@
 				
 				$( "#tfnewsearch" ).submit(function( event ) {
 					
-					
-					$.ajax({
-						url: "{% url 'home' %}",
-						type: 'POST',
-						data:{
-							rest: $('#tfq2b').val()
-						},
-						success: function(data){
-							alert(data)
-						}
-					});
-					
-					
+					Console.log('asdlfjasl;');
 					val1 = $('#tfq2b').val();
-					
-					window.location.href= 'http://localhost:8000/home/restaurant/mcdoalds';
-					event.preventDefault();
+					val1 = "#" + val1;
+					$('#McDonalds').hide();
 				});
 				
 			    </script>
@@ -165,7 +152,21 @@
     <!-- /.intro-header -->
 
     <!-- Page Content -->
-
+	
+	{% for restaurant, foodNutrition in restaurantFoodNutrition.items %}
+		<div id='{{ restaurant.name }}'>
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr><th>Name</th><th>price</th><th>calories</th><th>carbs</th><th>sugar</th><th>protein</th><th>fat</th></tr>
+				</thead>
+				<tbody>	
+					{% for food,nutrition in foodNutrition.items %}
+						<tr><td>{{ food.name }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td></tr>
+					{% endfor %}
+				</tbody>
+			<table>
+		</div>
+	{% endfor %}
     <!-- Footer -->
     <footer>
         <div class="container">

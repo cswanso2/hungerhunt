@@ -6,11 +6,15 @@ from hunger.models import Restaurant, Food, Nutrition
 # Create your views here.
 def hunger(request):
 	restaurants = list(Restaurant.objects.all())
-	if request.method == 'POST':
-		print "halsdfkjas;dfjasd;fj\n\n\n\n\n\n\n\n"
-	else:
-		print 'not ajax'
-	return render_to_response('index.html')
+	restaurantFoodNutrition = {}
+	for restaurant in restaurants:
+		foods = Food.objects.filter(restaurant__name=restaurant.name)
+		foodNutrition = {}
+		for food in foods:
+			nutrition = Nutrition.objects.get(food_id=food.id)
+			foodNutrition[food] = nutrition
+	restaurantFoodNutrition[restaurant] = foodNutrition
+	return render_to_response('index.html', {'restaurantFoodNutrition': restaurantFoodNutrition})
 	
 def restaurant(request, name):
 	#try: 
