@@ -19,15 +19,13 @@ class Restaurant(models.Model):
 	def __str__(self):
 		return self.name
 	
-
 class Food(models.Model):
-        restaurant = ForeignKey(Restaurant)
-	name = models.CharField(max_length = 20)
-	price = models.CharField(max_length = 10)
-	averageRating = models.IntegerField(default = 0)
-	def __str__(self):
-		return self.name
-
+        restaurant = models.ForeignKey(Restaurant)
+        name = models.CharField(max_length = 20)
+        price = models.CharField(max_length = 10)
+        averageRating = models.IntegerField(default = 0)
+        def __str__(self):
+                return self.name
 
 
 class SocialNetworking(models.Model):
@@ -57,5 +55,5 @@ class FoodRating(models.Model):
 
 
 class Share(models.Model):
-        foodName = ForeignKey(Food)
-        socialName = ForeignKey(SocialNetWorking)
+        foodName = models.ForeignKey(Food)
+        socialName = models.ForeignKey(SocialNetworking)

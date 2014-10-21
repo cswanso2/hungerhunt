@@ -4,7 +4,7 @@ from hunger.models import  Nutrition, FoodRating, Share
 
 class UserAdmin(admin.ModelAdmin):
     fieldsets = [ (None,  {'fields':['username']}),
-                  ('Log In', {'fields':['email']['password']}),
+                  ('Log In', {'fields':('email','password')}),
                 ]
     list_display = ('username','email','password')
     search_fields =['username']
@@ -15,7 +15,7 @@ class FoodInline(admin.TabularInline):
     
 class RestaurantAdmin(admin.ModelAdmin):
     fieldsets = [ (None,  {'fields':['name']}),
-                  ('Information', {'fields':['location']['phoneNumber']['type']}),
+                  ('Information', {'fields':('location','phoneNumber','type')}),
                 ]
     inlines =[FoodInline]
     list_display = ('name','phoneNumber','type','location')
@@ -23,7 +23,7 @@ class RestaurantAdmin(admin.ModelAdmin):
 
 class SocialNetworkingAdmin(admin.ModelAdmin):
     fieldsets = [ (None,  {'fields':['name']}),
-                  ('Log In', {'fields':['email']['password']}),
+                  ('Log In', {'fields':('email','password')}),
                 ]
     list_display = ('name','email','password')
     search_fields =['name']
