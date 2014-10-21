@@ -121,11 +121,11 @@
 					<tr><th>Name</th><th>price</th><th>calories</th><th>carbs</th><th>sugar</th><th>protein</th><th>fat</th></tr>
 				</thead>
 				<tbody>	
-					{% for food,nutrition in foodNutrition.items %}
+					{% for food, nutrition in foodNutrition.items %}
 						<tr><td>{{ food.name }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td></tr>
 					{% endfor %}
 				</tbody>
-			<table>
+			</table>
 		</div>
 	{% endfor %}
 	
