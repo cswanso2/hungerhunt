@@ -16,7 +16,7 @@ class User(models.Model):
 class Restaurant(models.Model):   
 	name = models.CharField(max_length = 30)
 	location = models.CharField(max_length = 100)
-	type = models.ForeignKey(Type)
+	type = models.ForeignKey(Type, null=True)
 	phoneNumber = models.CharField(max_length = 11)
 	picture = models.CharField(max_length = 120)
 	def __str__(self):

@@ -10,13 +10,18 @@
     <meta name="author" content="">
 
     <title>Hunger Hunt</title>
-
+    {% load static %}	
+	
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+	{% block static %} 
+		<link rel="stylesheet" type="text/css" href="{% static 'hunger\css\bootstrap.css' %}">
+		<link href="{% static 'hunger\css\restaurant_page.css' %}" rel="stylesheet">
+	{% endblock %}
+    
+	
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <!-- Custom CSS -->
-    <link href="css/restaurant_page.css" rel="stylesheet">
-
+	
     <!-- Custom Fonts -->
     <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
