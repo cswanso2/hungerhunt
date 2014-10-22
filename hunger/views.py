@@ -20,7 +20,7 @@ def register(request):
     c.update(csrf(request))
     return render_to_response("register.html", c)
 
-<<<<<<< HEAD
+
 @csrf_protect
 @ensure_csrf_cookie
 def foodNutrition(request):
@@ -42,8 +42,7 @@ def foodNutrition(request):
 	c.update(csrf(request))
 	return render_to_response("foodnutrition.html", c)
 
-=======
->>>>>>> bcd1c4b4407630ab8c915ded7854aee9447adf48
+
 @csrf_exempt
 def delete(request):    
     food = Food.objects.get(id = int(request.REQUEST['id']))

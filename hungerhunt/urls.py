@@ -14,13 +14,10 @@ urlpatterns = patterns('',
 	url(r'^register/', hungerViews.register, name='register'),
 	url(r'^delete/', hungerViews.delete, name='delete'),
 	url(r'^vote/', hungerViews.vote, name='vote'),
-<<<<<<< HEAD
 	url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
 	url(r'^addfood/', hungerViews.foodNutrition, name='createfood'),
-=======
-        url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
 	#url(r'^addfood/', hungerViews.createFood, name='addFood'),
->>>>>>> bcd1c4b4407630ab8c915ded7854aee9447adf48
 )
 urlpatterns += patterns('', (
     r'^static/(?P<path>.*)$',

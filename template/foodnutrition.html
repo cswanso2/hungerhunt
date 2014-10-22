@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Hunger Hunt Registration</title>
+    <meta charset="utf-8" />
+        {% load static %}
+
+	{% block static %} 
+		<link rel="stylesheet" type="text/css" href="{% static 'hunger\css\bootstrap.css' %}">
+		<link href="{% static 'hunger\css\register.css' %}" rel="stylesheet">
+	{% endblock %}
+  </head>
+
+  <body>
+	<form method="post" action=".">
+	{% csrf_token %}
+  	{{ form.as_p }}
+		<input type="submit" value="login" />
+	</form>
+  </body>
+
+</html>
