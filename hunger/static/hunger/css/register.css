@@ -5,7 +5,7 @@ body{
 /*------------------------------*/
 
 #signup {
-      
+      opacity:0.9;
       width: 550px;
       height: 470px;
       margin: 100px auto 50px auto;
@@ -47,7 +47,7 @@ body{
 
 #signup h1 {
       position: relative;
-      font: italic 1em/3.5em 'trebuchet MS',Arial, Helvetica;
+      font: italic 1.1em/3.5em 'trebuchet MS',Arial, Helvetica;
       color: #999;
       text-align: center;
       margin: 0 0 20px;

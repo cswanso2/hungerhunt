@@ -19,28 +19,14 @@ def register(request):
     c = {'form': form}
     c.update(csrf(request))
     return render_to_response("register.html", c)
-""""
-@csrf_protect
-@ensure_csrf_cookie
-def register(request):
-if request.method == 'POST':
-        form = FoodNutritionForm(request.POST)
-        if form.is_valid():
-            food = form.save()
-            return HttpResponseRedirect("/home/")
-    else:
-        form = FoodNutritionForm()
-    c = {'form': form}
-    c.update(csrf(request))
-    return render_to_response("foodnutrition.html", c)
-"""	
+
 @csrf_exempt
 def delete(request):    
     food = Food.objects.get(id = int(request.REQUEST['id']))
     food.delete()
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
-	
+
 @csrf_exempt	
 def vote(request):    
     print request.REQUEST
@@ -48,13 +34,13 @@ def vote(request):
     type, id = action.split('_')
     food = Food.objects.get(id = id)
     if type == 'upvote':
-		food.averageRating += 1
+	food.averageRating += 1
     else:
-		food.averageRating -= 1
+	food.averageRating -= 1
     food.save()
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
-	
+
 def hunger(request):
 	restaurants = list(Restaurant.objects.all())
 	restaurantFoodNutrition = {}

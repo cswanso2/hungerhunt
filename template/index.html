@@ -54,16 +54,23 @@
                     <li>
                         <a href="#">About</a>
                     </li>
-                    <li>
 		    {%if user.is_authenticated %}
-			<a href="">{{ user.username }}  </a>
+			<li>
+			<a id="username" href="">{{ user.username }}  </a>
+			</li>
+			<li>
+			<a href="{% url 'logout' %}"> Logout</a>
+			</li>
 			{% else %}
+			<li>
+			<a href="{% url 'login' %}">Login</a>
+			</li>
+			<li>
                         <a href="{% url 'register' %}">Register</a>
+			</li>
+
 		    {% endif %}
-                    </li>
-                    <li>
-                        <a href="#">Contact</a>
-                    </li>
+
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -129,95 +136,91 @@
 				</thead>
 				<tbody>	
 					{% for food, nutrition in foodNutrition.items %}
-						<tr><td>{{ food.name }}</td><td>{{ food.averageRating }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td>
-					{% if user.is_staff %}<td><button class="delete_button" id="{{ food.id }}">delete</button></td>{% endif %}</tr>
+						<tr id='{{ food.id }}_row'><td>{{ food.name }}</td><td>{{ food.averageRating }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td>
+					{% if user.is_staff %}<td><button class="delete_button" id="{{ food.id }}">delete</button></td>{% endif %}
 					{% if user.is_authenticated %} <td><button class="upvote_button" id="upvote_{{ food.id }}">upvote</button></td>
-					<td><button class="downvote_button" id="downvote_{{ food.id }}">downvote</button></td>{% endif %}
+					<td><button class="downvote_button" id="downvote_{{ food.id }}">downvote</button></td>{% endif %}</tr>
 					{% endfor %}
 				</tbody>
 			</table>
 		</div>
 	{% endfor %}
 	
-	
-	
-				    
-		<script>
-		    $(document).ready(function(){
-			$("#" + '{{ restaurant.name }}').hide();
-		    });
-			
-			
-			$(document).ready(function() {
-				$(".delete_button").click(function() {
-					alert('delete script')
-					var id = $(this).attr('id');
-					alert(id)
-					$.ajax({
-						type: "POST",
-						url: "/delete/",
-						data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
-						success: function(response){
-							alert(response.success);
-						}
-					});
-					return false;
-				});
-			});
-			
-			$(document).ready(function() {
-				$(".upvote_button").click(function() {
-					var id = $(this).attr('id');
-					alert(id)
-					$.ajax({
-						type: "POST",
-						url: "/vote/",
-						data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
-						success: function(response){
-							alert(response.success);
-						}
-					});
-					return false;
-				});
-			});
-			
-			$(document).ready(function() {
-				$(".downvote_button").click(function() {
-					var id = $(this).attr('id');
-					alert(id)
-					$.ajax({
-						type: "POST",
-						url: "/vote/",
-						data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
-						success: function(response){
-							alert(response.success);
-						}
-					});
-					return false;
-				});
-			});
-			
-		    $("#submit_arrow").click(function( event ) {
-			    console.log('it got here')
-			    $("#head_page").hide();
-			    val1 = $('#tfq2b').val().toLowerCase();
-			    val1 = val1.replace(/ /g,'');
-			    console.log(val1)
-			    $("#" + val1).show()
-			    console.log('asdlfjasl;');
 			    
-			    val1 = "#" + val1;
-			    event.preventDefault();
+	<script>
+	    $(document).ready(function(){
+		$("#" + '{{ restaurant.name }}').hide();
+	    });
+		
+		$(document).ready(function() {
+			$(".delete_button").click(function() {
+				alert('delete script')
+				var id = $(this).attr('id');
+				$("#" + id + '_row').hide();
+				$.ajax({
+					type: "POST",
+					url: "/delete/",
+					data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
+					success: function(response){
+						alert(response.success);
+					}
+				});
+				return false;
+			});
+		});
+		
+		$(document).ready(function() {
+			$(".upvote_button").click(function() {
+				var id = $(this).attr('id');
+				alert(id)
+				$.ajax({
+					type: "POST",
+					url: "/vote/",
+					data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
+					success: function(response){
+						alert(response.success);
+					}
+				});
+				return false;
+			});
+		});
+		
+		$(document).ready(function() {
+			$(".downvote_button").click(function() {
+				var id = $(this).attr('id');
+				alert(id)
+				$.ajax({
+					type: "POST",
+					url: "/vote/",
+					data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
+					success: function(response){
+						alert(response.success);
+					}
+				});
+				return false;
+			});
+		});
+		
+	    $("#submit_arrow").click(function( event ) {
+		    console.log('it got here')
+		    $("#head_page").hide();
+		    val1 = $('#tfq2b').val().toLowerCase();
+		    val1 = val1.replace(/ /g,'');
+		    console.log(val1)
+		    $("#" + val1).show()
+		    console.log('asdlfjasl;');
+		    
+		    val1 = "#" + val1;
+		    event.preventDefault();
+	    });
+		$(function() {
+		    $("#tfq2b").click(function() {
+			if ($("#tfq2b").val() == "Please enter a restaurant"){
+			    $("#tfq2b").val(""); 
+			}
 		    });
-                        $(function() {
-                            $("#tfq2b").click(function() {
-                                if ($("#tfq2b").val() == "Please enter a restaurant"){
-                                    $("#tfq2b").val(""); 
-                                }
-                            });
-                        });
-		</script>
-	
+		});
+	</script>
 	
 	
     <!-- Footer -->

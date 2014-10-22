@@ -3,6 +3,7 @@ from django.contrib import admin
 from hunger import views as hungerViews
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth.views import logout_then_login
 
 urlpatterns = patterns('',
     # Examples:
@@ -13,7 +14,7 @@ urlpatterns = patterns('',
 	url(r'^register/', hungerViews.register, name='register'),
 	url(r'^delete/', hungerViews.delete, name='delete'),
 	url(r'^vote/', hungerViews.vote, name='vote'),
-	url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
+        url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
 	#url(r'^addfood/', hungerViews.createFood, name='addFood'),
 )
 urlpatterns += patterns('', (
