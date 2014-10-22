@@ -1,24 +1,27 @@
 body{
-      background: #eee; 
+      background: url(../img/food-banner.jpg) no-repeat center center;
 }
 
 /*------------------------------*/
 
 #signup {
+      
       width: 550px;
-      height: 330px;
+      height: 470px;
       margin: 100px auto 50px auto;
-      padding: 20px;
+      padding: 10px;
       position: relative;
       border: 1px solid #ccc;
       -moz-border-radius: 3px;
       -webkit-border-radius: 3px; 
-      border-radius: 3px;  
+      border-radius: 3px;
+      
 }
 
 #signup::before, 
 #signup::after {
       content: "";
+      height: 470px;
       position: absolute;
       bottom: -3px;
       left: 2px;
@@ -26,7 +29,7 @@ body{
       top: 0;
       z-index: -1;
       background: #fff;
-      border: 1px solid #ccc;			
+      border: 1px solid #ccc;
 }
 
 #signup::after {
@@ -37,6 +40,7 @@ body{
       -moz-box-shadow: 0 8px 8px -5px rgba(0,0,0,.3);
       -webkit-box-shadow: 0 8px 8px -5px rgba(0,0,0,.3);
       box-shadow: 0 8px 8px -5px rgba(0,0,0,.3);
+      
 }
 
 /*------------------------------*/
@@ -47,6 +51,7 @@ body{
       color: #999;
       text-align: center;
       margin: 0 0 20px;
+     
 }
 
 #signup h1::before,
@@ -104,16 +109,16 @@ color: #bbb;
 
 #signup button{
       margin: 20px 0 0 0;
-      padding: 15px 8px;			
+      padding: 10px 30px;			
       width: 100%;
       cursor: pointer;
-      border: 1px solid #2493FF;
+      border: 1px solid #000000;
       overflow: visible;
       display: inline-block;
       color: #fff;
       font: bold 1.4em arial, helvetica;
-      text-shadow: 0 -1px 0 rgba(0,0,0,.4);		  
-      background-color: #2493ff;
+      text-shadow: 0 -1px 0 rgba(0,0,0,.);		  
+      background-color: #000000;
       background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.5)), to(rgba(255,255,255,0)));
       background-image: -webkit-linear-gradient(top, rgba(255,255,255,.5), rgba(255,255,255,0));
       background-image: -moz-linear-gradient(top, rgba(255,255,255,.5), rgba(255,255,255,0));
@@ -144,6 +149,7 @@ border-color: #7cbfff;
 #signup button:active{
       position: relative;
       top: 3px;
+      
       text-shadow: none;
       -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .3) inset;
       -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .3) inset;
@@ -152,12 +158,24 @@ border-color: #7cbfff;
 
 /* ------------------------------------------------- */
 
-#about{
-  color: #999;
-  text-align: center;
-  font: 0.9em Arial, Helvetica;
+body,
+html {
+    width: 100%;
+    height: 100%;
 }
 
-#about a{
-  color: #777;
-}		
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+}
+
+.lead {
+    font-size: 18px;
+    font-weight: 400;
+}
