@@ -20,6 +20,7 @@ def register(request):
     c.update(csrf(request))
     return render_to_response("register.html", c)
 
+<<<<<<< HEAD
 @csrf_protect
 @ensure_csrf_cookie
 def foodNutrition(request):
@@ -41,13 +42,15 @@ def foodNutrition(request):
 	c.update(csrf(request))
 	return render_to_response("foodnutrition.html", c)
 
+=======
+>>>>>>> bcd1c4b4407630ab8c915ded7854aee9447adf48
 @csrf_exempt
 def delete(request):    
     food = Food.objects.get(id = int(request.REQUEST['id']))
     food.delete()
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
-	
+
 @csrf_exempt	
 def vote(request):    
     print request.REQUEST
@@ -55,13 +58,13 @@ def vote(request):
     type, id = action.split('_')
     food = Food.objects.get(id = id)
     if type == 'upvote':
-		food.averageRating += 1
+	food.averageRating += 1
     else:
-		food.averageRating -= 1
+	food.averageRating -= 1
     food.save()
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
-	
+
 def hunger(request):
 	restaurants = list(Restaurant.objects.all())
 	restaurantFoodNutrition = {}
