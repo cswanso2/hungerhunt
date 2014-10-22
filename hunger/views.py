@@ -4,9 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.context_processors import csrf
 from hunger.models import Restaurant, Food, Nutrition
 from forms import UserForm
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
 
 @csrf_protect
+@ensure_csrf_cookie
 def register(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -19,10 +20,19 @@ def register(request):
     c.update(csrf(request))
     return render_to_response("register.html", c)
 
+@csrf_exempt
+def delete(request):    
+    food = Food.objects.get(id = int(request.REQUEST['id']))
+    food.delete()
+    payload = {'success': True}
+    print "\nheyhey\n\nheyhey\n\n"
+    return HttpResponse(json.dumps(payload), content_type='application/json')
+	
 # Create your views here.
 def hunger(request):
 	restaurants = list(Restaurant.objects.all())
 	restaurantFoodNutrition = {}
+	user = request.user
 	for restaurant in restaurants:
 		foods = list(Food.objects.filter(restaurant__id=restaurant.id))
 		foodNutrition = {}
@@ -30,4 +40,4 @@ def hunger(request):
 			nutrition = Nutrition.objects.get(food_id=food.id)
 			foodNutrition[food] = nutrition
 		restaurantFoodNutrition[restaurant] = foodNutrition
-	return render_to_response('index.html', {'restaurantFoodNutrition': restaurantFoodNutrition})
+	return render_to_response('index.html', {'restaurantFoodNutrition': restaurantFoodNutrition, 'user': user})
