@@ -55,7 +55,6 @@ def vote(request):
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
 	
-# Create your views here.
 def hunger(request):
 	restaurants = list(Restaurant.objects.all())
 	restaurantFoodNutrition = {}
