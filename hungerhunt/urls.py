@@ -12,6 +12,8 @@ urlpatterns = patterns('',
 	url(r'^home/', hungerViews.hunger, name='home'),
 	url(r'^register/', hungerViews.register, name='register'),
 	url(r'^delete/', hungerViews.delete, name='delete'),
+	url(r'^vote/', hungerViews.vote, name='vote'),
+	#url(r'^addfood/', hungerViews.createFood, name='addFood'),
 )
 urlpatterns += patterns('', (
     r'^static/(?P<path>.*)$',

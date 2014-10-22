@@ -118,11 +118,17 @@
 
 			<table class="table table-striped table-hover">
 				<thead>
-					<tr><th>Name</th><th>price</th><th>calories</th><th>carbs</th><th>sugar</th><th>protein</th><th>fat</th></tr>
+					<tr><th>Name</th><th>score</th><th>price</th><th>calories</th><th>carbs</th><th>sugar</th><th>protein</th><th>fat</th>
+					{% if user.is_staff %}<th>delete</th>{% endif %}</tr>
+					{% if user.is_authenticated %}<th>upvote</th><th>downvote</th>{% endif %}
+					</tr>
 				</thead>
 				<tbody>	
 					{% for food, nutrition in foodNutrition.items %}
-						<tr><td>{{ food.name }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td>{% if user.is_staff %}<td><button class="delete_button" id="{{ food.id }}">delete</button></td>{% endif %}</tr>
+						<tr><td>{{ food.name }}</td><td>{{ food.averageRating }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td>
+					{% if user.is_staff %}<td><button class="delete_button" id="{{ food.id }}">delete</button></td>{% endif %}</tr>
+					{% if user.is_authenticated %} <td><button class="upvote_button" id="upvote_{{ food.id }}">upvote</button></td>
+					<td><button class="downvote_button" id="downvote_{{ food.id }}">downvote</button></td>{% endif %}
 					{% endfor %}
 				</tbody>
 			</table>
@@ -146,6 +152,38 @@
 					$.ajax({
 						type: "POST",
 						url: "/delete/",
+						data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
+						success: function(response){
+							alert(response.success);
+						}
+					});
+					return false;
+				});
+			});
+			
+			$(document).ready(function() {
+				$(".upvote_button").click(function() {
+					var id = $(this).attr('id');
+					alert(id)
+					$.ajax({
+						type: "POST",
+						url: "/vote/",
+						data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
+						success: function(response){
+							alert(response.success);
+						}
+					});
+					return false;
+				});
+			});
+			
+			$(document).ready(function() {
+				$(".downvote_button").click(function() {
+					var id = $(this).attr('id');
+					alert(id)
+					$.ajax({
+						type: "POST",
+						url: "/vote/",
 						data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
 						success: function(response){
 							alert(response.success);

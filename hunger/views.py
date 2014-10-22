@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.context_processors import csrf
 from hunger.models import Restaurant, Food, Nutrition
-from forms import UserForm
+from forms import UserForm#, FoodNutritionForm
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
 
 @csrf_protect
@@ -19,13 +19,40 @@ def register(request):
     c = {'form': form}
     c.update(csrf(request))
     return render_to_response("register.html", c)
-
+""""
+@csrf_protect
+@ensure_csrf_cookie
+def register(request):
+if request.method == 'POST':
+        form = FoodNutritionForm(request.POST)
+        if form.is_valid():
+            food = form.save()
+            return HttpResponseRedirect("/home/")
+    else:
+        form = FoodNutritionForm()
+    c = {'form': form}
+    c.update(csrf(request))
+    return render_to_response("foodnutrition.html", c)
+"""	
 @csrf_exempt
 def delete(request):    
     food = Food.objects.get(id = int(request.REQUEST['id']))
     food.delete()
     payload = {'success': True}
-    print "\nheyhey\n\nheyhey\n\n"
+    return HttpResponse(json.dumps(payload), content_type='application/json')
+	
+@csrf_exempt	
+def vote(request):    
+    print request.REQUEST
+    action = request.REQUEST['id']
+    type, id = action.split('_')
+    food = Food.objects.get(id = id)
+    if type == 'upvote':
+		food.averageRating += 1
+    else:
+		food.averageRating -= 1
+    food.save()
+    payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
 	
 # Create your views here.

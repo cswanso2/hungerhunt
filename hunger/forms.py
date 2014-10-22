@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from models import Food, Nutrition, Restaurant
 
 class UserForm(UserCreationForm):
 	email = forms.EmailField(required=True)
@@ -20,3 +21,14 @@ class UserForm(UserCreationForm):
 			user.save()
 		return user
 	
+'''	
+class FoodNutritionForm(forms.Form):
+    calories = forms.IntegerField()
+    fat = forms.IntegerField()
+    protein = forms.IntegerField()
+    carbs = forms.IntegerField()
+    sugar = forms.IntegerField()
+    class Meta:
+        model = Food
+'''			
+		
