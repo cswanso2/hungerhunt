@@ -55,7 +55,7 @@
                         <a href="#">About</a>
                     </li>
                     <li>
-                        <a href="#">Services</a>
+                        <a href="{% url 'register' %}">Register</a>
                     </li>
                     <li>
                         <a href="#">Contact</a>
@@ -122,7 +122,7 @@
 				</thead>
 				<tbody>	
 					{% for food, nutrition in foodNutrition.items %}
-						<tr><td>{{ food.name }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td></tr>
+						<tr><td>{{ food.name }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td>{% if user.is_staff %}<td><button class="delete_button" id="{{ food.id }}">delete</button></td>{% endif %}</tr>
 					{% endfor %}
 				</tbody>
 			</table>
@@ -138,6 +138,22 @@
 		    });
 			
 			
+			$(document).ready(function() {
+				$(".delete_button").click(function() {
+					alert('delete script')
+					var id = $(this).attr('id');
+					alert(id)
+					$.ajax({
+						type: "POST",
+						url: "/delete/",
+						data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
+						success: function(response){
+							alert(response.success);
+						}
+					});
+					return false;
+				});
+			});
 			
 		    $("#submit_arrow").click(function( event ) {
 			    console.log('it got here')

@@ -11,7 +11,7 @@ urlpatterns = patterns('',
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^home/', hungerViews.hunger, name='home'),
 	url(r'^register/', hungerViews.register, name='register'),
-
+	url(r'^delete/', hungerViews.delete, name='delete'),
 )
 urlpatterns += patterns('', (
     r'^static/(?P<path>.*)$',
