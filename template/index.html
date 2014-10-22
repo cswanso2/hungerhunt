@@ -129,10 +129,21 @@
 				</thead>
 				<tbody>	
 					{% for food, nutrition in foodNutrition.items %}
-						<tr><td>{{ food.name }}</td><td>{{ food.averageRating }}</td><td>{{ food.price }}</td><td>{{ nutrition.calories }}</td><td>{{ nutrition.carbs }}</td><td>{{ nutrition.sugar }}</td><td>{{ nutrition.protein }}</td><td>{{ nutrition.fat }}</td>
-					{% if user.is_staff %}<td><button class="delete_button" id="{{ food.id }}">delete</button></td>{% endif %}</tr>
-					{% if user.is_authenticated %} <td><button class="upvote_button" id="upvote_{{ food.id }}">upvote</button></td>
-					<td><button class="downvote_button" id="downvote_{{ food.id }}">downvote</button></td>{% endif %}
+						<tr>
+						<td>{{ food.name }}</td>
+						<td>{{ food.averageRating }}</td>
+						<td>{{ food.price }}</td>
+						<td>{{ nutrition.calories }}</td>
+						<td>{{ nutrition.carbs }}</td>
+						<td>{{ nutrition.sugar }}</td>
+						<td>{{ nutrition.protein }}</td>
+						<td>{{ nutrition.fat }}</td>
+						{% if user.is_staff %}<td><button class="delete_button" id="{{ food.id }}">delete</button></td>{% endif %}
+						{% if user.is_authenticated %} 
+						<td><button class="upvote_button" id="upvote_{{ food.id }}">upvote</button></td>
+					    <td><button class="downvote_button" id="downvote_{{ food.id }}">downvote</button></td>
+						{% endif %}
+						</tr>
 					{% endfor %}
 				</tbody>
 			</table>

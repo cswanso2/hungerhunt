@@ -21,14 +21,17 @@ class UserForm(UserCreationForm):
 			user.save()
 		return user
 	
-'''	
-class FoodNutritionForm(forms.Form):
+
+class FoodNutritionForm(forms.ModelForm):
+	
     calories = forms.IntegerField()
     fat = forms.IntegerField()
     protein = forms.IntegerField()
     carbs = forms.IntegerField()
     sugar = forms.IntegerField()
     class Meta:
-        model = Food
-'''			
+		model = Food
+		fields = ['restaurant', 'name', 'price', 'averageRating']
+
+
 		

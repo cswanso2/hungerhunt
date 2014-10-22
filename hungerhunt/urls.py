@@ -14,7 +14,7 @@ urlpatterns = patterns('',
 	url(r'^delete/', hungerViews.delete, name='delete'),
 	url(r'^vote/', hungerViews.vote, name='vote'),
 	url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
-	#url(r'^addfood/', hungerViews.createFood, name='addFood'),
+	url(r'^addfood/', hungerViews.foodNutrition, name='createfood'),
 )
 urlpatterns += patterns('', (
     r'^static/(?P<path>.*)$',
