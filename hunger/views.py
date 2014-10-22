@@ -39,7 +39,6 @@ def delete(request):
     food = Food.objects.get(id = int(request.REQUEST['id']))
     food.delete()
     payload = {'success': True}
-<<<<<<< HEAD
     return HttpResponse(json.dumps(payload), content_type='application/json')
 	
 @csrf_exempt	
@@ -54,8 +53,6 @@ def vote(request):
 		food.averageRating -= 1
     food.save()
     payload = {'success': True}
-=======
->>>>>>> a198b1fa91780462411bfe4ea206b53e93d17e93
     return HttpResponse(json.dumps(payload), content_type='application/json')
 	
 # Create your views here.
