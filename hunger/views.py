@@ -25,7 +25,6 @@ def delete(request):
     food = Food.objects.get(id = int(request.REQUEST['id']))
     food.delete()
     payload = {'success': True}
-    print "\nheyhey\n\nheyhey\n\n"
     return HttpResponse(json.dumps(payload), content_type='application/json')
 	
 # Create your views here.
