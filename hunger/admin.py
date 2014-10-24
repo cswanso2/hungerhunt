@@ -15,10 +15,10 @@ class FoodInline(admin.TabularInline):
     
 class RestaurantAdmin(admin.ModelAdmin):
     fieldsets = [ (None,  {'fields':['name']}),
-                  ('Information', {'fields':('location','phoneNumber','type')}),
+                  ('Information', {'fields':('location','phoneNumber','picture')}),
                 ]
     inlines =[FoodInline]
-    list_display = ('name','phoneNumber','type','location')
+    list_display = ('name','phoneNumber','picture','location')
     search_fields =['name']
 
 class SocialNetworkingAdmin(admin.ModelAdmin):
@@ -33,10 +33,10 @@ class SocialNetworkingAdmin(admin.ModelAdmin):
 
     
 # Register your models here.
-admin.site.register(User)
+admin.site.register(User,UserAdmin)
 admin.site.register(Food)
-admin.site.register(Restaurant)
-admin.site.register(SocialNetworking)
+admin.site.register(Restaurant,RestaurantAdmin)
+admin.site.register(SocialNetworking,SocialNetworkingAdmin)
 admin.site.register(Nutrition)
 admin.site.register(FoodRating)
 admin.site.register(Share)
