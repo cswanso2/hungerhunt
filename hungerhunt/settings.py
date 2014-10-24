@@ -13,8 +13,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 

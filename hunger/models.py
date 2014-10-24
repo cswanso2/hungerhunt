@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db import transaction, connection
 # Create your models here.
 
 class Type(models.Model):
@@ -27,10 +28,10 @@ class Food(models.Model):
         name = models.CharField(max_length = 20)
         price = models.CharField(max_length = 10)
         averageRating = models.IntegerField(default = 0)
+
         def __str__(self):
-                return self.name
-
-
+	    return self.name
+	
 class SocialNetworking(models.Model):
         name = models.CharField(max_length = 20)
         email = models.CharField(max_length = 50)
@@ -60,3 +61,28 @@ class FoodRating(models.Model):
 class Share(models.Model):
         foodName = models.ForeignKey(Food)
         socialName = models.ForeignKey(SocialNetworking)
+
+def my_custom_sql():
+	print('hi')
+	from django.db import connection, transaction
+	cursor = connection.cursor()
+	print('before execute')
+	cursor.execute("UPDATE food SET averageRating = 1 WHERE food_id = %s", 2)
+	print('after execute')
+	transaction.commit_unless_managed()
+	
+#SQL Code Example:
+'''
+CREATE TABLE "users" (
+	username varchar(20) NOT NULL,
+	email varchar(50) NOT NULL,
+	passowrd varchar(20) NOT NULL
+);
+
+CREATE TABLE "foods"(
+	restaurant varchar(30) FOREIGN KEY REFERENCES Restaurant(name),
+	name varchar(20) NOT NULL,
+	price varchar(10) NOT NULL,
+	averageRating int DEFAULT 0
+)
+'''

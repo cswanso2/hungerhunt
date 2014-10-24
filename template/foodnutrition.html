@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Hunger Hunt Registration</title>
+    <title>Add Food</title>
     <meta charset="utf-8" />
         {% load static %}
 
@@ -15,7 +15,7 @@
 	<form method="post" action=".">
 	{% csrf_token %}
   	{{ form.as_p }}
-		<input type="submit" value="login" />
+		<input type="submit" value="Add" />
 	</form>
   </body>
 

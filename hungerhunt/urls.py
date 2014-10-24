@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.auth.views import logout_then_login
 
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'hungerhunt.views.home', name='home'),
@@ -16,7 +17,7 @@ urlpatterns = patterns('',
 	url(r'^vote/', hungerViews.vote, name='vote'),
 	url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
 	url(r'^addfood/', hungerViews.foodNutrition, name='createfood'),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
+        url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
 	#url(r'^addfood/', hungerViews.createFood, name='addFood'),
 )
 urlpatterns += patterns('', (
