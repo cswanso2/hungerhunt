@@ -28,21 +28,28 @@ def foodNutrition(request):
 	if request.method == 'POST':
 		form = FoodNutritionForm(request.POST)
 		if form.is_valid():
-			food = form.save()
-			calories = form.cleaned_data['calories']
-			fat = form.cleaned_data['fat']
-			protein = form.cleaned_data['protein']
-			carbs = form.cleaned_data['carbs']
-			sugar = form.cleaned_data['sugar']
-			nutrition = Nutrition(food=food,carbs = carbs,calories = calories,fat = fat,protein = protein,sugar = sugar)
-			nutrition.save()
+			price = str(request.REQUEST['price'])
+			rating = str(request.REQUEST['averageRating'])
+			restaurant = str(request.REQUEST['restaurant'])
+			food = str(request.REQUEST['name'])
+			calories = int(request.REQUEST['calories'])
+			fat = int(request.REQUEST['fat'])
+			protein = int(request.REQUEST['protein'])
+			carbs = int(request.REQUEST['carbs'])
+			sugar = int(request.REQUEST['sugar'])
+			
+			query1 = 'INSERT INTO hunger_food (name, restaurant_id, price, averageRating) VALUES ((%s), (%s), (%s), (%s))'
+			cursor = connection.cursor()
+			cursor.execute(query1, [food, restaurant, price, rating])
+			cursor.execute("SELECT id FROM hunger_food WHERE name = %s", [food])
+			food_id = cursor.fetchone()[0]
+			query2 = 'INSERT INTO hunger_nutrition (food_id, carbs, calories, fat, protein, sugar) VALUES ((%s), (%s), (%s), (%s), (%s), (%s))'
+			cursor.execute(query2, [food_id, carbs, calories, fat, protein, sugar])
 			return HttpResponseRedirect("/home/")
 			
-	
 	else:
 		form = FoodNutritionForm()
 	c = {'form': form}
-	print('fnosdjfdksnooooooooo')
 	c.update(csrf(request))
 	return render_to_response("foodnutrition.html", c)
 
