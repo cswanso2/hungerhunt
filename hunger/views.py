@@ -52,12 +52,12 @@ def delete(request):
 
 @csrf_exempt	
 def vote(request):    
-    print request.REQUEST
+    print (request.REQUEST)
     action = request.REQUEST['id']
     type, id = action.split('_')
     food = Food.objects.get(id = id)
     if type == 'upvote':
-	food.averageRating += 1
+        food.averageRating += 1
     else:
 	food.averageRating -= 1
     food.save()
