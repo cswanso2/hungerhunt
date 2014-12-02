@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.context_processors import csrf
-from hunger.models import Restaurant, Food, Nutrition
+from hunger.models import Restaurant, Food, Nutrition, FoodRating
 from forms import UserForm, FoodNutritionForm
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
 from django.db import connection, transaction
@@ -68,22 +68,32 @@ def delete(request):
 @csrf_exempt	
 def vote(request):
     print request.REQUEST
+    user = request.user
     action = request.REQUEST['id']
     type, id = action.split('_')
     food = Food.objects.raw("SELECT * FROM hunger_food WHERE id == {}".format(id))[0]
-    print('test is {}'.format(food))
+    user = request.user
+    cursor = connection.cursor()
     if type == 'upvote':
-	cursor = connection.cursor()
-	cursor.execute('UPDATE hunger_food SET averageRating = averageRating+1 WHERE name = (%s)', [food.name])
-	cursor.execute("COMMIT;")
-	print('hello')
+		cursor.execute('UPDATE hunger_food SET averageRating = averageRating+1 WHERE name = (%s);', [food.name])
     else:
-	cursor = connection.cursor()
-	cursor.execute('UPDATE hunger_food SET averageRating = averageRating-1 WHERE name = (%s)', [food.name])
-	cursor.execute("COMMIT;")
-    food.save()
+		cursor.execute('UPDATE hunger_food SET averageRating = averageRating-1 WHERE name = (%s);', [food.name])
+    try:
+    	foodVote = FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE user_id == {} AND food_id == {}".format(user.id, food.id))[0]
+    except:
+    	print 'INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(1, user.id, food.id)
+    	cursor.execute('INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(1, user.id, food.id))
+    	print 'line 3'
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
+
+@csrf_exempt
+def socialNetworkingUpdate(request):
+	print "in function"
+	results = "SELECT * FROM hunger_food WHERE id == {}".format(id)
+
+	payload = {'success': True}
+	return HttpResponse(json.dumps(payload), content_type='application/json')
 
 def hunger(request):
 	restaurants = []
