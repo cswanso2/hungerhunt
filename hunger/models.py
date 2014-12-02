@@ -4,13 +4,6 @@ from django.db import transaction, connection
 # Create your models here.
 
 
-class User(models.Model):
-        username = models.CharField(max_length = 20)
-        email = models.CharField(max_length = 50)
-        password = models.CharField(max_length = 20)
-        def __str__(self):
-                return self.username
-
 class Restaurant(models.Model):   
 	name = models.CharField(max_length = 30)
 	location = models.CharField(max_length = 100)
@@ -67,6 +60,12 @@ class FoodRating(models.Model):
 class Share(models.Model):
         foodName = models.ForeignKey(Food)
         socialName = models.ForeignKey(SocialNetworking)
+
+class SocialStats(models.Model):
+	numberOfTweets = models.IntegerField(default=0)
+	likedOnOurSite = models.BooleanField(default=False)
+	user = models.ForeignKey(User)
+	restaurant = models.ForeignKey(Restaurant)
 
 def my_custom_sql():
 	print('hi')
