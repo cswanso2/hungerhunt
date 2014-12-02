@@ -125,7 +125,7 @@
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr><th>Name</th><th>score</th><th>price</th><th>calories</th><th>carbs</th><th>sugar</th><th>protein</th><th>fat</th>
-					{% if user.is_staff %}<th>delete</th>{% endif %}</tr>
+					{% if user.is_staff %}<th>delete</th>{% endif %}
 					{% if user.is_authenticated %}<th>upvote</th><th>downvote</th>{% endif %}
 					</tr>
 				</thead>
@@ -151,8 +151,8 @@
 			</table>
 			<a href="{% url 'createfood' %}">Add Food</a>
 			<br>
-			<div class="btn-toolbar pull-right fb-like" data-href="{{ restaurant.faceBookLikeURL }}" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
-			<a href="https://twitter.com/share" class="btn-toolbar pull-right twitter-share-button" data-text="I just checked out {{ restauant.name }} on hungerhunt!">Tweet</a>
+			<div class="btn-toolbar pull-right fb-like social_media" data-href="{{ restaurant.faceBookLikeURL }}" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+			<div class="social_media" id="tweet"><a href="https://twitter.com/share" class="social_media btn-toolbar pull-right twitter-share-button" data-text="I just checked out {{ restaurant.name }} on hungerhunt!">Tweet</a></div>
 			{% if restaurant.hasTwitter %}
 				<a href="https://twitter.com/{{ restaurant.twitterHandle }}" class="btn-toolbar pull-right twitter-follow-button" data-show-count="false">Follow @mcdonalds</a>
 			{% endif %}
@@ -164,11 +164,15 @@
 	
 			    
 	<script>
+
 	    $(document).ready(function(){
 		$("#" + '{{ restaurant.name }}').hide();
+		
 	    });
 		
 		$(document).ready(function() {
+
+			
 			$(".delete_button").click(function() {
 				var id = $(this).attr('id');
 				$("#" + id + '_row').hide();
@@ -206,7 +210,12 @@
 			});
 		});
 		
+		
 		$(document).ready(function() {
+			console.log("THIS SHOULD SHOW UP")
+			    $(".social_media").click(function() {  
+				console.log("works!")
+			    });
 			$(".downvote_button").click(function() {
 				var id = $(this).attr('id');
 				var id = $(this).attr('id');
@@ -228,6 +237,8 @@
 				return false;
 			});
 		});
+		
+
 		
 	    $("#submit_arrow").click(function( event ) {
 		    console.log('it got here')
@@ -252,10 +263,27 @@
 		
 	</script><div id="fb-root"></div>
 	<script>
+			
+		window.fbAsyncInit = function() {
+			FB.init({
+			  appId      : '497603830381904',
+			  xfbml      : true,
+			  version    : 'v2.2'
+			});
+			var page_like_or_unlike_callback = function(url, html_element) {
+				console.log("page_like_or_unlike_callback");
+			}
+			FB.Event.subscribe('edge.create', page_like_or_unlike_callback);
+			FB.Event.subscribe('edge.remove', page_like_or_unlike_callback);
+			
+		};
+			
 		//facebook like/share
 		(function(d, s, id) {
 		  var js, fjs = d.getElementsByTagName(s)[0];
 		  if (d.getElementById(id)) return;
+
+		  
 		  js = d.createElement(s); js.id = id;
 		  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
 		  fjs.parentNode.insertBefore(js, fjs);
@@ -279,6 +307,8 @@
 			}
 		}(document, 'script', 'twitter-wjs');
 	  
+
+
 	</script>
 	
 	
