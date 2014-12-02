@@ -16,6 +16,9 @@ class Restaurant(models.Model):
 	location = models.CharField(max_length = 100)
 	#typeR = models.CharField(max_length = 20)
 	#models.ForeignKey(Type, null=True)
+	faceBookLikeURL = models.URLField(default=False)
+	hasTwitter = models.BooleanField()
+	twitterHandle = models.CharField(max_length = 50)
 	phoneNumber = models.CharField(max_length = 11)
 	picture = models.CharField(max_length = 120)
 	def __str__(self):

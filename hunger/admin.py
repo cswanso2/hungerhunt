@@ -15,7 +15,7 @@ class FoodInline(admin.TabularInline):
     
 class RestaurantAdmin(admin.ModelAdmin):
     fieldsets = [ (None,  {'fields':['name']}),
-                  ('Information', {'fields':('location','phoneNumber','picture')}),
+                  ('Information', {'fields':('location','phoneNumber','picture', 'faceBookLikeURL', 'hasTwitter', 'twitterHandle')}),
                 ]
     inlines =[FoodInline]
     list_display = ('name','phoneNumber','picture','location')
