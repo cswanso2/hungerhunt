@@ -151,8 +151,13 @@
 			</table>
 		</div>
 	{% endfor %}
-	<a hidden id="addfood" href="{% url 'createfood' %}">Add Food</a>
-	
+	<div hidden id="addfood">
+		<a href="{% url 'createfood' %}">Add Food</a>
+		<br>
+		<div class="btn-toolbar pull-right fb-like" data-href="https://www.facebook.com/McDonalds" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+		<a href="https://twitter.com/share" class="btn-toolbar pull-right twitter-share-button" data-text="I just checked out mcdonalds on hungerhunt!">Tweet</a>
+		<a href="https://twitter.com/mcdonalds" class="btn-toolbar pull-right twitter-follow-button" data-show-count="false">Follow @mcdonalds</a>
+	</div>
 	
 			    
 	<script>
@@ -241,6 +246,36 @@
 			}
 		    });
 		});
+		
+	</script><div id="fb-root"></div>
+	<script>
+		//facebook like/share
+		(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	      
+	      //twitter tweet 
+		!function(d,s,id){
+		  var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+		  if(!d.getElementById(id)){
+			  js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+			  fjs.parentNode.insertBefore(js,fjs);
+			  }
+		  }(document, 'script', 'twitter-wjs');
+		
+		//twitter follow
+		!function(d,s,id){
+			var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+			if(!d.getElementById(id)){js=d.createElement(s);
+			js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+			fjs.parentNode.insertBefore(js,fjs);
+			}
+		}(document, 'script', 'twitter-wjs');
+	  
 	</script>
 	
 	
