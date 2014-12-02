@@ -3,9 +3,6 @@ from django.contrib.auth.models import User
 from django.db import transaction, connection
 # Create your models here.
 
-class Type(models.Model):
-	type = models.CharField(max_length = 20)
-
 
 class User(models.Model):
         username = models.CharField(max_length = 20)
@@ -17,12 +14,18 @@ class User(models.Model):
 class Restaurant(models.Model):   
 	name = models.CharField(max_length = 30)
 	location = models.CharField(max_length = 100)
-	type = models.ForeignKey(Type, null=True)
+	#typeR = models.CharField(max_length = 20)
+	#models.ForeignKey(Type, null=True)
 	phoneNumber = models.CharField(max_length = 11)
 	picture = models.CharField(max_length = 120)
 	def __str__(self):
 		return self.name
 	
+class Type(models.Model):
+	typeR = models.CharField(max_length = 20)
+	restaurant = models.ForeignKey(Restaurant, null=True)
+        
+
 class Food(models.Model):
         restaurant = models.ForeignKey(Restaurant)
         name = models.CharField(max_length = 20)
