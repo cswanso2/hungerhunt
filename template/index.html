@@ -150,13 +150,16 @@
 				</tbody>
 			</table>
 			<a href="{% url 'createfood' %}">Add Food</a>
-			<br>
+		
 			<div class="btn-toolbar pull-right fb-like social_media" data-href="{{ restaurant.faceBookLikeURL }}" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
-			<div class="social_media" id="tweet"><a href="https://twitter.com/share" class="social_media btn-toolbar pull-right twitter-share-button" data-text="I just checked out {{ restaurant.name }} on hungerhunt!">Tweet</a></div>
 			{% if restaurant.hasTwitter %}
 				<a href="https://twitter.com/{{ restaurant.twitterHandle }}" class="btn-toolbar pull-right twitter-follow-button" data-show-count="false">Follow @mcdonalds</a>
 			{% endif %}
-			</div>
+			<a href="" class="btn-toolbar pull-right twitter-share-button" data-text="I just checked out {{ restaurant.name }} on hungerhunt!"><i class="btn-toolbar pull-right twitter-share-button"></i> Tweet</a>
+
+		
+		
+		</div>
 	{% endfor %}
 	<div hidden id="addfood">
 		
@@ -171,7 +174,7 @@
 	    });
 		
 		$(document).ready(function() {
-
+			
 			
 			$(".delete_button").click(function() {
 				var id = $(this).attr('id');
@@ -213,9 +216,6 @@
 		
 		$(document).ready(function() {
 			console.log("THIS SHOULD SHOW UP")
-			    $(".social_media").click(function() {  
-				console.log("works!")
-			    });
 			$(".downvote_button").click(function() {
 				var id = $(this).attr('id');
 				var id = $(this).attr('id');
@@ -282,13 +282,12 @@
 		(function(d, s, id) {
 		  var js, fjs = d.getElementsByTagName(s)[0];
 		  if (d.getElementById(id)) return;
-
-		  
 		  js = d.createElement(s); js.id = id;
 		  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));
 	      
+	      /**
 	      //twitter tweet 
 		!function(d,s,id){
 		  var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
@@ -306,8 +305,28 @@
 			fjs.parentNode.insertBefore(js,fjs);
 			}
 		}(document, 'script', 'twitter-wjs');
+		**/
+	      
+	      
+	      function reward_user( event ) {
+			if ( event ) {
+			    console.log("TWETTEIRj")
+			}
+		    }
+		    
+		    window.twttr = (function (d,s,id) {
+			var t, js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
+			js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
+			return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+			}(document, "script", "twitter-wjs"));
+		    
+		    twttr.ready(function (twttr) {
+			twttr.events.bind('tweet', reward_user);
+		    });
 	  
-
+	  
+	
 
 	</script>
 	
