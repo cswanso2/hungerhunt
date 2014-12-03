@@ -76,7 +76,7 @@ def getSharedAdvanced(userList, otherList):
 		if otherList[otherIt] == userList[userIt]:
 			shared += 1
 			userIt += 1
-		else if otherList[otherIt] > userList[userIt]:
+		elif otherList[otherIt] > userList[userIt]:
 			userIt += 1
 		else:
 			otherIt += 1
