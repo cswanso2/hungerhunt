@@ -60,13 +60,20 @@ def foodNutrition(request):
 
 @ensure_csrf_cookie
 def trends(request):
-	foodRatings = {}
-	for foods in FoodRating.objects.raw("SELECT * FROM hunger_foodrating"):
+	foodRatings = []
+	mostPopular = []
+	for foods in Food.objects.raw("SELECT * FROM hunger_food ORDER BY averageRating DESC LIMIT 5"):
+		foodRatings.append(foods)
 		print("here??????")
 		print(foods)
-		foodRatings[foods.food] = foods.rating
-	print(foodRatings)
-	return render_to_response("trends.html", {'foodRatings': foodRatings})
+	
+
+	
+	for restaurant in Food.objects.raw("SELECT *, totalLike + totalTweet as total FROM hunger_restaurant ORDER BY total DESC LIMIT 5"):
+		mostPopular.append(restaurant)
+		
+	print(mostPopular)
+	return render_to_response("trends.html", {'foodRatings': foodRatings, 'mostPopular':mostPopular})
 
 def getSharedAdvanced(userList, otherList):
 	userIt = 0
