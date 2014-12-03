@@ -203,6 +203,17 @@
 		
 		$(document).ready(function() {
 			$(".recommend").click(function(){
+				$(".recommend").click(function(){
+				$.ajax({
+					type: "POST",
+					url: "/recommend/",
+					data: {csrfmiddlewaretoken:'{% csrf_token %}' },
+					success: function(response){
+						alert(response.success);
+					}
+				});
+				
+				/**
 				$("#addfood").hide()
 				$("#head_page").hide();
 				rest = "#wendys"
@@ -221,6 +232,7 @@
 							$td.eq(0).closest("tr").css({ 'background-color' : 'red'});
 						}
 						
+					})**/
 					})
 				})
 			})
@@ -245,7 +257,7 @@
 				});
 				return false;
 			});
-		});
+		
 
 		$("#submit_arrow").click(function( event ) {
 			console.log('it got here')
