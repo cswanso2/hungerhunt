@@ -69,8 +69,19 @@ def trends(request):
 	return render_to_response("trends.html", {'foodRatings': foodRatings})
 
 def getSharedAdvanced(userList, otherList):
-	print userList 
-	print otherLis
+	userIt = 0
+	otherIt = 0
+	shared = 0
+	while otherIt < len(otherList) and userIt < len(userList):
+		if otherList[otherIt] == userList[userIt]:
+			shared += 1
+			userIt += 1
+		else if otherList[otherIt] > userList[userIt]:
+			userIt += 1
+		else:
+			otherIt += 1
+	return shared
+
 
 @csrf_exempt
 def recommend(request):
@@ -86,21 +97,21 @@ def recommend(request):
 	for rating in foodRatings:
 		tempUser = rating.user
 		if tempUser.id in userFoodRatings:
-			print 0
-			print userFoodRatings[tempUser.id]
-			bisect.insort_left(userFoodRatings[tempUser.id], rating.food.id)
-			print 1
+			userFoodRatings[tempUser.id].append(rating.food.id)
 		else:
-			print 'here'
 			userFoodRatings[tempUser.id] = [rating.food.id]
 	print userFoodRatings
-	userList = userFoodRatings[user]
+	userList = userFoodRatings[user.id].sort()
 	maxShared = 0
-	otherKey = None
-	for userKey, foodList in userFoodRatings:
-		if userKey != user:
+	otherId = -1
+	for userKey in userFoodRatings:
+		print("here")
+		if userKey != user.id:
+			otherList = userFoodRatings[userKey].sort()
 			shared = getShared(userList, otherList)
-	print("done")
+			if(shared > maxShared):
+				maxShared = shared
+				otherId = userKey
 
 
 
