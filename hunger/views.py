@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_
 from django.db import connection, transaction
 from datetime import datetime
 from bisect import bisect
+import json
 
 @csrf_protect
 @ensure_csrf_cookie
@@ -196,6 +197,7 @@ def hunger(request):
 		foodNutrition = {}
 		for food in foods:
 			query = "SELECT * FROM hunger_nutrition WHERE food_id == {} LIMIT 1".format(food.id)
+
 			nutrition = Nutrition.objects.raw(query)[0]
 			foodNutrition[food] = nutrition
 		restaurantFoodNutrition[restaurant] = foodNutrition
