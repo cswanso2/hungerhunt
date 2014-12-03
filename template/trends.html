@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Hunger Hunt Registration</title>
+    <meta charset="utf-8" />
+        {% load static %}
+	
+	{% block static %}
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="{% static 'hunger\css\bootstrap.css' %}">
+		<link href="{% static 'hunger\css\register.css' %}" rel="stylesheet">
+	{% endblock %}
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Hunger Hunt</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+    </nav>
+    
+        
+    <div id='head_page' class="intro-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                </div>
+            </div> <!-- row div -->
+        </div>
+    </div>
+  
+    <div class="row">
+      <div id="trends_title" "col-md-2 col-centered text-center"><h1>Trends</h1></div>
+    </div>
+
+
+	<script>
+
+	</script>
+  </body>
+
+<style>
+  #trends_title{
+    padding-top: 50px;
+    padding-left: 50%;
+    
+  }
+  .col-centered{
+    float: none;
+    margin: 0 auto;
+}
+</style>
+</html>

@@ -47,9 +47,6 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="#">About</a>
-                    </li>
 		    {%if user.is_authenticated %}
 			<li>
 			<a id="username" href="">{{ user.username }}  </a>
@@ -66,6 +63,9 @@
 			</li>
 
 		    {% endif %}
+			<li>
+                        <a href="{% url 'trends' %}">View Trends</a>
+			</li>
 
                 </ul>
             </div>
@@ -146,7 +146,7 @@
 			{% if restaurant.hasTwitter %}
 				<a href="https://twitter.com/{{ restaurant.twitterHandle }}" class="btn-toolbar pull-right twitter-follow-button" data-show-count="false">Follow @mcdonalds</a>
 			{% endif %}
-			<a href="" class="btn-toolbar pull-right twitter-share-button" data-text="I just checked out {{ restaurant.name }} on hungerhunt!"><i class="btn-toolbar pull-right twitter-share-button"></i> Tweet</a>
+			<a href="" class="btn-toolbar pull-right twitter-share-button {{ restaurant.name }}_twitter" data-text="I just checked out {{ restaurant.name }} on hungerhunt!"><i class="btn-toolbar pull-right twitter-share-button"></i> Tweet</a>
 			<br>
 		</div>
 	{% endfor %}
@@ -156,7 +156,7 @@
 	
 			    
 	<script>
-	
+		var currentName;
 		$(document).ready(function(){
 			$("#" + '{{ restaurant.name }}').hide();
 			
@@ -254,6 +254,7 @@
 			val1 = val1.replace(/ /g,'');
 			console.log(val1)
 			$("#" + val1).show()
+			currentName = val1;
 			$("#addfood").show()
 			console.log('asdlfjasl;');
 			
@@ -292,6 +293,17 @@
 			FB.Event.subscribe('edge.create', page_like_or_unlike_callback);
 			FB.Event.subscribe('edge.remove', page_like_or_unlike_callback);
 			
+			/**
+			FB.api({ method: 'fql.query', query: 'SELECT uid FROM page_fan WHERE uid=UID AND page_id=PAGEID' },
+			function(result) {
+			    if (result.length){ 
+			       console.log("is fan")
+			    } 
+		     
+			    else { 
+			       console.log("isn't fan")  
+			    }
+			})**/
 		};		
 			
 		//facebook like/share
@@ -326,7 +338,8 @@
 	      
 	      function reward_user( event ) {
 			if ( event ) {
-			    console.log("TWETTEIRj")
+			    console.log("TWjkkkkk")
+			    console.log(currentName)
 			}
 		    }
 		    
