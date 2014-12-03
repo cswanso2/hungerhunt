@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+
     <title>Hunger Hunt</title>
 
     <!-- Bootstrap Core CSS -->
@@ -93,6 +93,7 @@
 			<button type="button" class="recommend btn btn-default center-block" id="recommendButton">Recommend a food item</button>
                         <br>
                     </div>
+
                 </div>
             </div> <!-- row div -->
         </div>
@@ -203,7 +204,10 @@
 		
 		$(document).ready(function() {
 			$(".recommend").click(function(){
+<<<<<<< HEAD
 				$(".recommend").click(function(){
+=======
+>>>>>>> 23afff3880580650195fddb3430bd8f07676b4ff
 				$.ajax({
 					type: "POST",
 					url: "/recommend/",
@@ -212,8 +216,12 @@
 						alert(response.success);
 					}
 				});
+<<<<<<< HEAD
 				
 				/**
+=======
+				/*
+>>>>>>> 23afff3880580650195fddb3430bd8f07676b4ff
 				$("#addfood").hide()
 				$("#head_page").hide();
 				rest = "#wendys"
@@ -235,6 +243,7 @@
 					})**/
 					})
 				})
+*/
 			})
 			
 			$(".downvote_button").click(function() {
