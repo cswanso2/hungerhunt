@@ -99,7 +99,10 @@ def vote(request):
     try:
     	foodVote = FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE user_id = {} AND food_id = {}".format(user.id, food.id))[0]
     except:
-    	cursor.execute('INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(1, user.id, food.id))
+    	if type == 'upvote':
+    		cursor.execute('INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(1, user.id, food.id))
+    	else:
+    		cursor.execute('INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(-1, user.id, food.id))
     	print 'line 3'
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
@@ -119,12 +122,12 @@ def socialNetworkingUpdate(request):
 		if updateType == 'tweet':
 			cursor.execute('UPDATE hunger_socialstat SET tweet =  1 WHERE user_id = {} AND restaurant_id = {}'.format(user.id, restaurant.id))
 		else:
-			cursor.execute('UPDATE hunger_socialstat SET likedOnOurSite = 1 WHERE user_id = {} AND restaurant_id = {}'.format(user.id, restaurant.id))
+		    cursor.execute('UPDATE hunger_socialstat SET likedOnOurSite = 1 WHERE user_id = {} AND restaurant_id = {}'.format(user.id, restaurant.id))
 	except:
+		if updateType == 'tweet':
 			cursor.execute('INSERT INTO hunger_socialstat (user_id, restaurant_id, likedOnOurSite, tweet) VALUES ({},{},{},{});'.format(user.id, restaurant.id, 0, 1))
 		else:
 			cursor.execute('INSERT INTO hunger_socialstat (user_id, restaurant_id, likedOnOurSite, tweet) VALUES ({},{},{},{});'.format(user.id, restaurant.id, 1, 0))
-	print updateType
 	if(updateType=='tweet'):
 		cursor.execute('UPDATE hunger_restaurant SET totalTweet =  totalTweet + 1 WHERE id = {};'.format(str(restaurant.id)))
 	else:
