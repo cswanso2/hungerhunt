@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <title>Hunger Hunt</title>
 
     <!-- Bootstrap Core CSS -->
@@ -284,7 +284,7 @@
 				$.ajax({
 					type: "POST",
 					url: "/socialNetworkingUpdate/",
-					data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
+					data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}', name: currentName, type: 'facebookLike' },
 					success: function(response){
 						alert(response.success);
 					}
@@ -338,8 +338,16 @@
 	      
 	      function reward_user( event ) {
 			if ( event ) {
-			    console.log("TWjkkkkk")
+			    
 			    console.log(currentName)
+				$.ajax({
+					type: "POST",
+					url: "/socialNetworkingUpdate/",
+					data: {csrfmiddlewaretoken:'{% csrf_token %}', name: currentName, type: 'tweet'},
+					success: function(response){
+						alert(response.success);
+					}
+				});
 			}
 		    }
 		    

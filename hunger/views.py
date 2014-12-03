@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.context_processors import csrf
-from hunger.models import Restaurant, Food, Nutrition, FoodRating
+from hunger.models import Restaurant, Food, Nutrition, FoodRating, SocialStat
 from forms import UserForm, FoodNutritionForm
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
 from django.db import connection, transaction
 
@@ -38,7 +39,6 @@ def foodNutrition(request):
 			protein = int(request.REQUEST['protein'])
 			carbs = int(request.REQUEST['carbs'])
 			sugar = int(request.REQUEST['sugar'])
-			
 			query1 = 'INSERT INTO hunger_food (name, restaurant_id, price, averageRating) VALUES ((%s), (%s), (%s), (%s))'
 			cursor = connection.cursor()
 			cursor.execute(query1, [food, restaurant, price, rating])
@@ -65,6 +65,13 @@ def trends(request):
 	return render_to_response("trends.html", {'foodratings': foodRatings})
 
 @csrf_exempt
+def randomFood(request):
+	user = request.user
+	users = User.objects.raw("SELECT * FROM auth_user")
+
+
+
+@csrf_exempt
 def delete(request):
     id = int(request.REQUEST['id'])
     query = 'SELECT * FROM hunger_food WHERE id == {}'.format(id)
@@ -74,6 +81,7 @@ def delete(request):
     cursor.execute("COMMIT;")
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
+
 
 @csrf_exempt	
 def vote(request):
@@ -89,9 +97,8 @@ def vote(request):
     else:
 		cursor.execute('UPDATE hunger_food SET averageRating = averageRating-1 WHERE name = (%s);', [food.name])
     try:
-    	foodVote = FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE user_id == {} AND food_id == {}".format(user.id, food.id))[0]
+    	foodVote = FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE user_id = {} AND food_id = {}".format(user.id, food.id))[0]
     except:
-    	print 'INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(1, user.id, food.id)
     	cursor.execute('INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(1, user.id, food.id))
     	print 'line 3'
     payload = {'success': True}
@@ -99,9 +106,29 @@ def vote(request):
 
 @csrf_exempt
 def socialNetworkingUpdate(request):
-	print "in function"
-	results = "SELECT * FROM hunger_food WHERE id == {}".format(id)
-
+	print 'in function'
+	user = request.user
+	name = request.REQUEST['name']
+	cursor = connection.cursor()
+	updateType = request.REQUEST['type']
+	restaurant = Restaurant.objects.filter(name__iexact=name)[0]
+	name = restaurant.name
+	print 0
+	try:
+		socialstat = SocialStat.objects.filter(user_id=user.id).filter(restaurant_id=restaurant.id)[0]
+		if updateType == 'tweet':
+			cursor.execute('UPDATE hunger_socialstat SET tweet =  1 WHERE user_id = {} AND restaurant_id = {}'.format(user.id, restaurant.id))
+		else:
+			cursor.execute('UPDATE hunger_socialstat SET likedOnOurSite = 1 WHERE user_id = {} AND restaurant_id = {}'.format(user.id, restaurant.id))
+	except:
+			cursor.execute('INSERT INTO hunger_socialstat (user_id, restaurant_id, likedOnOurSite, tweet) VALUES ({},{},{},{});'.format(user.id, restaurant.id, 0, 1))
+		else:
+			cursor.execute('INSERT INTO hunger_socialstat (user_id, restaurant_id, likedOnOurSite, tweet) VALUES ({},{},{},{});'.format(user.id, restaurant.id, 1, 0))
+	print updateType
+	if(updateType=='tweet'):
+		cursor.execute('UPDATE hunger_restaurant SET totalTweet =  totalTweet + 1 WHERE id = {};'.format(str(restaurant.id)))
+	else:
+		cursor.execute('UPDATE hunger_restaurant SET totalLike =  totalLike + 1 WHERE id = {};'.format(str(restaurant.id)))
 	payload = {'success': True}
 	return HttpResponse(json.dumps(payload), content_type='application/json')
 

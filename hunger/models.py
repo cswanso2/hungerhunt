@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db import transaction, connection
+from datetime import datetime
 # Create your models here.
 
 
@@ -14,6 +15,8 @@ class Restaurant(models.Model):
 	twitterHandle = models.CharField(max_length = 50)
 	phoneNumber = models.CharField(max_length = 11)
 	picture = models.CharField(max_length = 120)
+	totalTweet = models.IntegerField(default=0)
+	totalLike = models.IntegerField(default=0)
 	def __str__(self):
 		return self.name
 	
@@ -27,9 +30,8 @@ class Food(models.Model):
         name = models.CharField(max_length = 20)
         price = models.CharField(max_length = 10)
         averageRating = models.IntegerField(default = 0)
-
         def __str__(self):
-	    return self.name
+	    	return self.name
 	
 class SocialNetworking(models.Model):
         name = models.CharField(max_length = 20)
@@ -53,19 +55,18 @@ class Nutrition(models.Model):
 # relationship Has_Eaten
 class FoodRating(models.Model):
 	user = models.ForeignKey(User)
+	time = models.DateTimeField(auto_now=True, default=datetime.now())
 	food = models.ForeignKey(Food)
-	rating = models.IntegerField(default=0)
+	rating = models.IntegerField(default=0)	
 
 
-class Share(models.Model):
-        foodName = models.ForeignKey(Food)
-        socialName = models.ForeignKey(SocialNetworking)
-
-class SocialStats(models.Model):
-	numberOfTweets = models.IntegerField(default=0)
+class SocialStat(models.Model):
+	tweet = models.BooleanField(default=False)
 	likedOnOurSite = models.BooleanField(default=False)
+	time = models.DateTimeField(auto_now=True, default=datetime.now())
 	user = models.ForeignKey(User)
 	restaurant = models.ForeignKey(Restaurant)
+	
 
 def my_custom_sql():
 	print('hi')

@@ -2,11 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -28,6 +30,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('rating', models.IntegerField(default=0)),
                 ('food', models.ForeignKey(to='hunger.Food')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
             },
@@ -54,19 +57,13 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=30)),
                 ('location', models.CharField(max_length=100)),
-                ('websiteURL', models.URLField()),
+                ('faceBookLikeURL', models.URLField(default=False)),
+                ('hasTwitter', models.BooleanField()),
+                ('twitterHandle', models.CharField(max_length=50)),
                 ('phoneNumber', models.CharField(max_length=11)),
                 ('picture', models.CharField(max_length=120)),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='Share',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('foodName', models.ForeignKey(to='hunger.Food')),
+                ('totalTweets', models.IntegerField(default=0)),
+                ('totalLikes', models.IntegerField(default=0)),
             ],
             options={
             },
@@ -85,6 +82,19 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='SocialStat',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('numberOfTweets', models.IntegerField(default=0)),
+                ('likedOnOurSite', models.BooleanField(default=False)),
+                ('restaurant', models.ForeignKey(to='hunger.Restaurant')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Type',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -94,30 +104,6 @@ class Migration(migrations.Migration):
             options={
             },
             bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='User',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('username', models.CharField(max_length=20)),
-                ('email', models.CharField(max_length=50)),
-                ('password', models.CharField(max_length=20)),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        migrations.AddField(
-            model_name='share',
-            name='socialName',
-            field=models.ForeignKey(to='hunger.SocialNetworking'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='foodrating',
-            name='user',
-            field=models.ForeignKey(to='hunger.User'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='food',

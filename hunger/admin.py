@@ -1,6 +1,6 @@
 from django.contrib import admin
-from hunger.models import Food, Restaurant, SocialNetworking, SocialStats
-from hunger.models import  Nutrition, FoodRating, Share
+from hunger.models import Food, Restaurant, SocialNetworking
+from hunger.models import  Nutrition, FoodRating
 
 class FoodInline(admin.TabularInline):
     model = Food
@@ -8,10 +8,10 @@ class FoodInline(admin.TabularInline):
     
 class RestaurantAdmin(admin.ModelAdmin):
     fieldsets = [ (None,  {'fields':['name']}),
-                  ('Information', {'fields':('location','phoneNumber','picture', 'faceBookLikeURL', 'hasTwitter', 'twitterHandle')}),
+                  ('Information', {'fields':('location','phoneNumber','picture', 'faceBookLikeURL', 'hasTwitter', 'twitterHandle', 'totalLike', 'totalTweet')}),
                 ]
     inlines =[FoodInline]
-    list_display = ('name','phoneNumber','picture','location')
+    list_display = ('name','phoneNumber','picture','location', 'faceBookLikeURL', 'hasTwitter', 'twitterHandle', 'totalLike', 'totalTweet')
     search_fields =['name']
 
 class SocialNetworkingAdmin(admin.ModelAdmin):
@@ -48,4 +48,3 @@ admin.site.register(Restaurant,RestaurantAdmin)
 admin.site.register(SocialNetworking,SocialNetworkingAdmin)
 admin.site.register(Nutrition,NutritionAdmin)
 admin.site.register(FoodRating)
-admin.site.register(Share)
