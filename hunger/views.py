@@ -83,13 +83,20 @@ def getSharedAdvanced(userList, otherList):
 	return shared
 
 
+def getFood(otherList):
+	seed = random.randint(0, len(otherList) - 1)
+	food = Food.objects.raw("SELECT * FROM hunger_food WHERE id = {}".format(foodId))
+	return food
+
 @csrf_exempt
 def recommend(request):
 	print("in function")
 	user = request.user
+	"""
 	users = []
 	for tempUser in User.objects.raw("SELECT * FROM auth_user WHERE id != {}".format(user.id)):
 		users.append(tempUser)
+	"""
 	foodRatings = []
 	for rating in FoodRating.objects.raw("SELECT * FROM hunger_foodrating"):
 		foodRatings.append(rating)
@@ -101,6 +108,8 @@ def recommend(request):
 		else:
 			userFoodRatings[tempUser.id] = [rating.food.id]
 	print userFoodRatings
+	if user.id not in userFoodRatings:
+		return HttpResponse(json.dumps({'success': False}), content_type='application/json')
 	userList = userFoodRatings[user.id].sort()
 	maxShared = 0
 	otherId = -1
@@ -112,6 +121,21 @@ def recommend(request):
 			if(shared > maxShared):
 				maxShared = shared
 				otherId = userKey
+	count = 5
+	otherList = userFoodRatings[otherId]
+	while count > 0:
+		food = getFood(otherList)
+		if food.id not in userList:
+			restaurantName = food.restaurant.name
+			foodName = food.name
+			payload = {'success': True, 'restaurantName': restaurantName, 'foodName': foodName}
+    		return HttpResponse(json.dumps(payload), content_type='application/json')
+		count -= 1
+	food = getFood(otherList)
+	restaurantName = food.restaurant.name
+	foodName = food.name
+	payload = {'success': True, 'restaurantName': restaurantName, 'foodName': foodName}
+    return HttpResponse(json.dumps(payload), content_type='application/json')
 
 
 
