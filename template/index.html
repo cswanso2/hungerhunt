@@ -81,7 +81,7 @@
                 <div class="col-lg-12">
                     <div class="intro-message">
                         <h1>Welcome</h1>
-                        <h3>Start by entering a restaurant of your choice</h3>
+                        <h3>Enter a restaurant of your choice</h3>
                         <hr class="intro-divider">
                             <div id="search-bar">
                                 <form id="tfnewsearch">
@@ -89,18 +89,9 @@
                                 </form>
                                 <div class="tfclear"></div>
                             </div>
-
-                        <ul class="list-inline intro-social-buttons">
-                            <li>
-                                <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
-                            </li>
-                            <li>
-                                <a href="https://github.com/IronSummitMedia/startbootstrap" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn btn-default btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
-                            </li>
-                        </ul>
+			<h4>Get a recommended food item based on your likes</h4>
+			<button type="button" class="recommend btn btn-default center-block" id="recommendButton">Recommend a food item</button>
+                        <br>
                     </div>
                 </div>
             </div> <!-- row div -->
@@ -122,7 +113,7 @@
 					<h2 id='parameter'>{{ restaurant.name }}</h2>
 				</div>
 
-			<table class="table table-striped table-hover">
+			<table id='{{ restaurant.name|lower|cut:" " }}' class="table table-hover">
 				<thead>
 					<tr><th>Name</th><th>score</th><th>price</th><th>calories</th><th>carbs</th><th>sugar</th><th>protein</th><th>fat</th>
 					{% if user.is_staff %}<th>delete</th>{% endif %}
@@ -149,16 +140,14 @@
 					{% endfor %}
 				</tbody>
 			</table>
-			<a href="{% url 'createfood' %}">Add Food</a>
+			<a id="addFood" href="{% url 'createfood' %}">Add Food</a>
 		
 			<div class="btn-toolbar pull-right fb-like social_media" data-href="{{ restaurant.faceBookLikeURL }}" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
 			{% if restaurant.hasTwitter %}
 				<a href="https://twitter.com/{{ restaurant.twitterHandle }}" class="btn-toolbar pull-right twitter-follow-button" data-show-count="false">Follow @mcdonalds</a>
 			{% endif %}
 			<a href="" class="btn-toolbar pull-right twitter-share-button" data-text="I just checked out {{ restaurant.name }} on hungerhunt!"><i class="btn-toolbar pull-right twitter-share-button"></i> Tweet</a>
-
-		
-		
+			<br>
 		</div>
 	{% endfor %}
 	<div hidden id="addfood">
@@ -167,15 +156,13 @@
 	
 			    
 	<script>
-
-	    $(document).ready(function(){
-		$("#" + '{{ restaurant.name }}').hide();
-		
-	    });
-		
+	
+		$(document).ready(function(){
+			$("#" + '{{ restaurant.name }}').hide();
+			
+		});
+			
 		$(document).ready(function() {
-			
-			
 			$(".delete_button").click(function() {
 				var id = $(this).attr('id');
 				$("#" + id + '_row').hide();
@@ -215,7 +202,29 @@
 		
 		
 		$(document).ready(function() {
-			console.log("THIS SHOULD SHOW UP")
+			$(".recommend").click(function(){
+				$("#addfood").hide()
+				$("#head_page").hide();
+				rest = "#wendys"
+				food = "baconator"
+				console.log(rest)
+				$("#wendys").show()
+				$("#addFood").hide()
+				var table= $("#wendys > tbody");
+				table.find('tr').each(function(i){
+					console.log("L:()")
+					var $td = $(this).find('td')
+					table_val = $td.eq(0).html().toLowerCase();
+					$td.each(function(j){
+						if (table_val.indexOf(food)>= 0) {
+							console.log(table_val)
+							$td.eq(0).closest("tr").css({ 'background-color' : 'red'});
+						}
+						
+					})
+				})
+			})
+			
 			$(".downvote_button").click(function() {
 				var id = $(this).attr('id');
 				var id = $(this).attr('id');
@@ -237,22 +246,20 @@
 				return false;
 			});
 		});
-		
 
-		
-	    $("#submit_arrow").click(function( event ) {
-		    console.log('it got here')
-		    $("#head_page").hide();
-		    val1 = $('#tfq2b').val().toLowerCase();
-		    val1 = val1.replace(/ /g,'');
-		    console.log(val1)
-		    $("#" + val1).show()
-		    $("#addfood").show()
-		    console.log('asdlfjasl;');
-		    
-		    val1 = "#" + val1;
-		    event.preventDefault();
-	    });
+		$("#submit_arrow").click(function( event ) {
+			console.log('it got here')
+			$("#head_page").hide();
+			val1 = $('#tfq2b').val().toLowerCase();
+			val1 = val1.replace(/ /g,'');
+			console.log(val1)
+			$("#" + val1).show()
+			$("#addfood").show()
+			console.log('asdlfjasl;');
+			
+			val1 = "#" + val1;
+			event.preventDefault();
+		});
 		$(function() {
 		    $("#tfq2b").click(function() {
 			if ($("#tfq2b").val() == "Please enter a restaurant"){
@@ -272,11 +279,20 @@
 			});
 			var page_like_or_unlike_callback = function(url, html_element) {
 				console.log("page_like_or_unlike_callback");
+				id = "upvote_10"
+				$.ajax({
+					type: "POST",
+					url: "/socialNetworkingUpdate/",
+					data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
+					success: function(response){
+						alert(response.success);
+					}
+				});
 			}
 			FB.Event.subscribe('edge.create', page_like_or_unlike_callback);
 			FB.Event.subscribe('edge.remove', page_like_or_unlike_callback);
 			
-		};
+		};		
 			
 		//facebook like/share
 		(function(d, s, id) {
