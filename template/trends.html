@@ -60,7 +60,7 @@
 
 			<table id='ratings' class="table table-hover">
 				<thead>
-					<tr><th>Food</th><th>Rating</th>
+					<tr><th>Food</th><th>Rating</th><th>Restaurant</th>
 					</tr>
 				</thead>
 				<tbody>	
@@ -68,7 +68,7 @@
 						<tr id="{{ food.id }}_row">
 						<td>{{ food.name }}</td>
 						<td id='score_{{ food.id }}'>{{ food.averageRating }}</td>
-						<td>{{ food.price }}</td>
+						<td>{{ food.restaurant }}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

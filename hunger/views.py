@@ -58,7 +58,6 @@ def foodNutrition(request):
 	return render_to_response("foodnutrition.html", c)
 
 
-@csrf_protect
 @ensure_csrf_cookie
 def trends(request):
 	foodRatings = {}
