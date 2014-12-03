@@ -7,6 +7,8 @@ from forms import UserForm, FoodNutritionForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
 from django.db import connection, transaction
+from datetime import datetime
+from bisect import bisect
 
 @csrf_protect
 @ensure_csrf_cookie
@@ -64,10 +66,40 @@ def trends(request):
 
 	return render_to_response("trends.html", {'foodratings': foodRatings})
 
+def getSharedAdvanced(userList, otherList):
+	print userList 
+	print otherLis
+
 @csrf_exempt
-def randomFood(request):
+def recommend(request):
+	print("in function")
 	user = request.user
-	users = User.objects.raw("SELECT * FROM auth_user")
+	users = []
+	for tempUser in User.objects.raw("SELECT * FROM auth_user WHERE id != {}".format(user.id)):
+		users.append(tempUser)
+	foodRatings = []
+	for rating in FoodRating.objects.raw("SELECT * FROM hunger_foodrating"):
+		foodRatings.append(rating)
+		userFoodRatings = {}
+	for rating in foodRatings:
+		tempUser = rating.user
+		if tempUser.id in userFoodRatings:
+			print 0
+			print userFoodRatings[tempUser.id]
+			bisect.insort_left(userFoodRatings[tempUser.id], rating.food.id)
+			print 1
+		else:
+			print 'here'
+			userFoodRatings[tempUser.id] = [rating.food.id]
+	print userFoodRatings
+	userList = userFoodRatings[user]
+	maxShared = 0
+	otherKey = None
+	for userKey, foodList in userFoodRatings:
+		if userKey != user:
+			shared = getShared(userList, otherList)
+	print("done")
+
 
 
 
@@ -100,9 +132,11 @@ def vote(request):
     	foodVote = FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE user_id = {} AND food_id = {}".format(user.id, food.id))[0]
     except:
     	if type == 'upvote':
-    		cursor.execute('INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(1, user.id, food.id))
+    		rating = FoodRating(rating=1, user_id=user.id, food_id=food.id, time=datetime.now())
+    		rating.save()
     	else:
-    		cursor.execute('INSERT INTO hunger_foodrating (rating, user_id, food_id) VALUES ({},{},{});'.format(-1, user.id, food.id))
+    		rating = FoodRating(rating=-1, user_id=user.id, food_id=food.id, time=datetime.now())
+    		rating.save()
     	print 'line 3'
     payload = {'success': True}
     return HttpResponse(json.dumps(payload), content_type='application/json')
