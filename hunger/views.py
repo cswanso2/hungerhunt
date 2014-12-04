@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
 from django.db import connection, transaction
 from datetime import datetime
+from datetime import timedelta
 from bisect import bisect
 import json
 import random
@@ -61,11 +62,18 @@ def trends(request):
 	user = request.user
 	foodRatings = []
 	mostPopular = []
+	popularToday = []
 	for foods in Food.objects.raw("SELECT * FROM hunger_food ORDER BY averageRating DESC LIMIT 5"):
 		foodRatings.append(foods)
 	for restaurant in Food.objects.raw("SELECT *, totalLike + totalTweet as total FROM hunger_restaurant ORDER BY total DESC LIMIT 5"):
 		mostPopular.append(restaurant)
-	return render_to_response("trends.html", {'foodRatings': foodRatings, 'mostPopular':mostPopular, 'user':user})
+
+	#get today and tomorrows date 
+	now = datetime.now().strftime("%Y-%m-%d")
+	tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+	for ratingObject in FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE time >= '{}' AND time <= '{}' ORDER BY rating DESC LIMIT 5".format(now, tomorrow)):
+		popularToday.append(ratingObject)
+	return render_to_response("trends.html", {'foodRatings': foodRatings, 'mostPopular':mostPopular, 'user':user, 'popularToday':popularToday})
 
 def getShared(userList, otherList):
 	userIt = 0

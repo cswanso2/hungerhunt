@@ -100,12 +100,35 @@
 			</thead>
 			<tbody>	
 				{% for restaurant in mostPopular %}
-  
 					<tr id="{{ food.id }}_row">
 					<td>{{ restaurant.name }}</td>
 					<td id='score_{{ food.id }}'>{{ restaurant.totalLike }}</td>
 					<td>{{ restaurant.totalTweet }}</td>
 					<td>{{ restaurant.totalTweet|add:restaurant.totalLike }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+	<div id='popularToday'>
+			<div class="col-lg-12">
+				<br>
+				<br>
+				<h2 id='parameter'>Top 5 Foods Most Popular Today</h2>
+			</div>
+
+		<table id='ratings' class="table table-hover">
+			<thead>
+				<tr><th>Food</th><th>Rating</th>
+				</tr>
+			</thead>
+			<tbody>	
+				{% for item in popularToday %}
+					<tr id="{{ food.id }}_row">
+					<td>{{ item.food }}</td>
+					<td id='score_{{ food.id }}'>{{ restaurant.totalLike }}</td>
+					<td>{{ item.rating }}</td>
 					</tr>
 				{% endfor %}
 			</tbody>
