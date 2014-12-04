@@ -65,17 +65,13 @@ def trends(request):
 	for foods in Food.objects.raw("SELECT * FROM hunger_food ORDER BY averageRating DESC LIMIT 5"):
 		foodRatings.append(foods)
 		print("here??????")
-		print(foods)
-	
-
 	
 	for restaurant in Food.objects.raw("SELECT *, totalLike + totalTweet as total FROM hunger_restaurant ORDER BY total DESC LIMIT 5"):
 		mostPopular.append(restaurant)
-		
-	print(mostPopular)
+
 	return render_to_response("trends.html", {'foodRatings': foodRatings, 'mostPopular':mostPopular})
 
-def getSharedAdvanced(userList, otherList):
+def getShared(userList, otherList):
 	userIt = 0
 	otherIt = 0
 	shared = 0
@@ -88,6 +84,54 @@ def getSharedAdvanced(userList, otherList):
 		else:
 			otherIt += 1
 	return shared
+
+
+def getFood(otherList):
+	seed = random.randint(0, len(otherList) - 1)
+	foodId = otherList[seed]
+	food = Food.objects.raw("SELECT * FROM hunger_food WHERE id = {}".format(str(foodId)))[0]
+	return food
+
+@csrf_exempt
+def recommend(request):
+	user = request.user
+	foodRatings = []
+	for rating in FoodRating.objects.raw("SELECT * FROM hunger_foodrating"):
+		foodRatings.append(rating)
+	userFoodRatings = {}
+	for rating in foodRatings:
+		tempUser = rating.user
+		if tempUser.id in userFoodRatings:
+			userFoodRatings[tempUser.id].append(rating.food.id)
+		else:
+			userFoodRatings[tempUser.id] = [rating.food.id]
+	if user.id not in userFoodRatings:
+		return HttpResponse(json.dumps({'success': False}), content_type='application/json')
+	userList = sorted(userFoodRatings[user.id])
+	maxShared = 0
+	otherId = -1
+	for userKey in userFoodRatings:
+		if userKey != user.id and userKey in userFoodRatings:
+			otherList = sorted(userFoodRatings[userKey])
+			shared = getShared(userList, otherList)
+			if(shared > maxShared):
+				maxShared = shared
+				otherId = userKey
+	count = 5
+	otherList = userFoodRatings[otherId]
+	while count > 0:
+		food = getFood(otherList)
+		if food.id not in userList:
+			restaurantName = food.restaurant.name
+			foodName = food.name
+			payload = {'success': True, 'restaurantName': restaurantName, 'foodName': foodName, 'foodId': food.id}
+			return HttpResponse(json.dumps(payload), content_type='application/json')
+		count -= 1
+	food = getFood(otherList)
+	restaurantName = food.restaurant.name
+	foodName = food.name
+	payload = {'success': True, 'restaurantName': restaurantName, 'foodName': foodName, 'foodId': food.id}
+	return HttpResponse(json.dumps(payload), content_type='application/json')
 
 
 @csrf_exempt
@@ -170,18 +214,12 @@ def socialNetworkingUpdate(request):
 	updateType = request.REQUEST['type']
 	restaurant = Restaurant.objects.filter(name__iexact=name)[0]
 	name = restaurant.name
-	print 0
-	try:
-		socialstat = SocialStat.objects.filter(user_id=user.id).filter(restaurant_id=restaurant.id)[0]
-		if updateType == 'tweet':
-			cursor.execute('UPDATE hunger_socialstat SET tweet =  1 WHERE user_id = {} AND restaurant_id = {}'.format(user.id, restaurant.id))
-		else:
-		    cursor.execute('UPDATE hunger_socialstat SET likedOnOurSite = 1 WHERE user_id = {} AND restaurant_id = {}'.format(user.id, restaurant.id))
-	except:
-		if updateType == 'tweet':
-			cursor.execute('INSERT INTO hunger_socialstat (user_id, restaurant_id, likedOnOurSite, tweet) VALUES ({},{},{},{});'.format(user.id, restaurant.id, 0, 1))
-		else:
-			cursor.execute('INSERT INTO hunger_socialstat (user_id, restaurant_id, likedOnOurSite, tweet) VALUES ({},{},{},{});'.format(user.id, restaurant.id, 1, 0))
+	timeString =datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	if updateType == 'tweet':
+		cursor.execute("INSERT INTO hunger_socialstat (user_id, restaurant_id, likedOnOurSite, tweet, time) VALUES ({},{},{},{},'{}');".format(user.id, restaurant.id, 0, 1, timeString))
+	else:
+		cursor.execute("INSERT INTO hunger_socialstat (user_id, restaurant_id, likedOnOurSite, tweet, time) VALUES ({},{},{},{},'{}');".format(user.id, restaurant.id, 0, 1, timeString))
+	print "past"
 	if(updateType=='tweet'):
 		cursor.execute('UPDATE hunger_restaurant SET totalTweet =  totalTweet + 1 WHERE id = {};'.format(str(restaurant.id)))
 	else:

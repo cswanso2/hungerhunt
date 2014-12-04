@@ -12,7 +12,6 @@
 
     <!-- Bootstrap Core CSS -->
     {% load static %}
-
 	{% block static %} 
 		<link rel="stylesheet" type="text/css" href="{% static 'hunger\css\bootstrap.css' %}">
 		<link href="{% static 'hunger\css\main_page.css' %}" rel="stylesheet">
@@ -61,7 +60,6 @@
 			<li>
                         <a href="{% url 'register' %}">Register</a>
 			</li>
-
 		    {% endif %}
 			<li>
                         <a href="{% url 'trends' %}">View Trends</a>
@@ -193,7 +191,7 @@
 					url: "/vote/",
 					data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
 					success: function(response){
-						alert(response.success);
+						
 					}
 				});
 				return false;
@@ -202,39 +200,42 @@
 		
 		
 		$(document).ready(function() {
-			$(".recommend").click(function(){
+			
+			    $('#tfnewsearch').bind('keypress keydown keyup', function(e){
+				if(e.keyCode == 13){
+					e.preventDefault();
+					$("#head_page").hide();
+					val1 = $('#tfq2b').val().toLowerCase();
+					val1 = val1.replace(/ /g,'');
+					console.log(val1)
+					$("#" + val1).show()
+					currentName = val1;
+					$("#addfood").show()
+				}
+			     });
+			    
+			
 				$(".recommend").click(function(){
-				$.ajax({
-					type: "POST",
-					url: "/recommend/",
-					data: {csrfmiddlewaretoken:'{% csrf_token %}' },
-					success: function(response){
-						alert(response.success);
-					}
-				});
-				
-				/**
-				$("#addfood").hide()
-				$("#head_page").hide();
-				rest = "#wendys"
-				food = "baconator"
-				console.log(rest)
-				$("#wendys").show()
-				$("#addFood").hide()
-				var table= $("#wendys > tbody");
-				table.find('tr').each(function(i){
-					console.log("L:()")
-					var $td = $(this).find('td')
-					table_val = $td.eq(0).html().toLowerCase();
-					$td.each(function(j){
-						if (table_val.indexOf(food)>= 0) {
-							console.log(table_val)
-							$td.eq(0).closest("tr").css({ 'background-color' : 'red'});
+					$(".recommend").click(function(){
+					$.ajax({
+						type: "POST",
+						url: "/recommend/",
+						data: {csrfmiddlewaretoken:'{% csrf_token %}' },
+						success: function(response){
+							$("#head_page").hide();
+							pageToShow = "#" + response.restaurantName
+							pageToShow = pageToShow.toLowerCase()
+							alert(pageToShow)
+							$(pageToShow).show()
+							rowToShow = "#" + response.foodId.toString() + "_row"
+							$(rowToShow).css({ 'background-color' : 'red'});
 						}
-						
-					})**/
+					});
+					
 					})
 				})
+		
+
 			})
 			
 			$(".downvote_button").click(function() {
@@ -252,7 +253,7 @@
 					url: "/vote/",
 					data: { id:id, csrfmiddlewaretoken:'{% csrf_token %}' },
 					success: function(response){
-						alert(response.success);
+						
 					}
 				});
 				return false;
@@ -273,6 +274,7 @@
 			val1 = "#" + val1;
 			event.preventDefault();
 		});
+		
 		$(function() {
 		    $("#tfq2b").click(function() {
 			if ($("#tfq2b").val() == "Please enter a restaurant"){
@@ -304,18 +306,6 @@
 			}
 			FB.Event.subscribe('edge.create', page_like_or_unlike_callback);
 			FB.Event.subscribe('edge.remove', page_like_or_unlike_callback);
-			
-			/**
-			FB.api({ method: 'fql.query', query: 'SELECT uid FROM page_fan WHERE uid=UID AND page_id=PAGEID' },
-			function(result) {
-			    if (result.length){ 
-			       console.log("is fan")
-			    } 
-		     
-			    else { 
-			       console.log("isn't fan")  
-			    }
-			})**/
 		};		
 			
 		//facebook like/share
@@ -347,11 +337,8 @@
 		}(document, 'script', 'twitter-wjs');
 		**/
 	      
-	      
-	      function reward_user( event ) {
-			if ( event ) {
-			    
-			    console.log(currentName)
+	      function reward_user(event) {
+			if (event){
 				$.ajax({
 					type: "POST",
 					url: "/socialNetworkingUpdate/",
