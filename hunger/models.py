@@ -19,11 +19,6 @@ class Restaurant(models.Model):
 	totalLike = models.IntegerField(default=0)
 	def __str__(self):
 		return self.name
-	
-class Type(models.Model):
-	typeR = models.CharField(max_length = 20)
-	restaurant = models.ForeignKey(Restaurant, null=True)
-        
 
 class Food(models.Model):
         restaurant = models.ForeignKey(Restaurant)
