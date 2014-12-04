@@ -10,6 +10,8 @@ from django.db import connection, transaction
 from datetime import datetime
 from bisect import bisect
 import json
+import random
+import time
 
 @csrf_protect
 @ensure_csrf_cookie
@@ -94,6 +96,7 @@ def getFood(otherList):
 
 @csrf_exempt
 def recommend(request):
+	print "beginning"
 	user = request.user
 	foodRatings = []
 	for rating in FoodRating.objects.raw("SELECT * FROM hunger_foodrating"):
@@ -110,6 +113,7 @@ def recommend(request):
 	userList = sorted(userFoodRatings[user.id])
 	maxShared = 0
 	otherId = -1
+	
 	for userKey in userFoodRatings:
 		if userKey != user.id and userKey in userFoodRatings:
 			otherList = sorted(userFoodRatings[userKey])
@@ -118,54 +122,24 @@ def recommend(request):
 				maxShared = shared
 				otherId = userKey
 	count = 5
+
 	otherList = userFoodRatings[otherId]
 	while count > 0:
 		food = getFood(otherList)
+		print "ok"
 		if food.id not in userList:
 			restaurantName = food.restaurant.name
 			foodName = food.name
 			payload = {'success': True, 'restaurantName': restaurantName, 'foodName': foodName, 'foodId': food.id}
 			return HttpResponse(json.dumps(payload), content_type='application/json')
 		count -= 1
+	print otherId
 	food = getFood(otherList)
 	restaurantName = food.restaurant.name
 	foodName = food.name
+	print "end"
 	payload = {'success': True, 'restaurantName': restaurantName, 'foodName': foodName, 'foodId': food.id}
 	return HttpResponse(json.dumps(payload), content_type='application/json')
-
-
-@csrf_exempt
-def recommend(request):
-	print("in function")
-	user = request.user
-	users = []
-	for tempUser in User.objects.raw("SELECT * FROM auth_user WHERE id != {}".format(user.id)):
-		users.append(tempUser)
-	foodRatings = []
-	for rating in FoodRating.objects.raw("SELECT * FROM hunger_foodrating"):
-		foodRatings.append(rating)
-		userFoodRatings = {}
-	for rating in foodRatings:
-		tempUser = rating.user
-		if tempUser.id in userFoodRatings:
-			userFoodRatings[tempUser.id].append(rating.food.id)
-		else:
-			userFoodRatings[tempUser.id] = [rating.food.id]
-	print userFoodRatings
-	userList = userFoodRatings[user.id].sort()
-	maxShared = 0
-	otherId = -1
-	for userKey in userFoodRatings:
-		print("here")
-		if userKey != user.id:
-			otherList = userFoodRatings[userKey].sort()
-			shared = getShared(userList, otherList)
-			if(shared > maxShared):
-				maxShared = shared
-				otherId = userKey
-
-
-
 
 @csrf_exempt
 def delete(request):
