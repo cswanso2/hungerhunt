@@ -1,0 +1,14 @@
+#title{
+  padding-top: 33px;
+}
+/**
+#form_div{
+      background-color: #fff;
+      opacity: 0.9;
+}**/
+body{
+      background: url(../img/food-banner.jpg) no-repeat center center;
+}
+form{
+      font-weight: 900;
+}
