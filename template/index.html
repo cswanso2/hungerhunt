@@ -41,7 +41,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Hunger Hunt</a>
+                <a class="navbar-brand" href="/home/">Hunger Hunt</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -88,8 +88,10 @@
                                 <div class="tfclear"></div>
                             </div>
 			<h4>Get a recommended food item based on your likes</h4>
+			{% if user.is_authenticated %} 
 			<button type="button" class="recommend btn btn-default center-block" id="recommendButton">Recommend a food item</button>
-                        <br>
+                        {% endif %}
+			<br>
                     </div>
                 </div>
             </div> <!-- row div -->
@@ -151,6 +153,7 @@
 	<div hidden id="addfood">
 		
 	</div>
+	
 	
 			    
 	<script>

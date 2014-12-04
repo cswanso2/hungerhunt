@@ -28,14 +28,29 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-
+		    {%if user.is_authenticated %}
+			<li>
+			<a id="username" href="">{{ user.username }}  </a>
+			</li>
+			<li>
+			<a href="{% url 'logout' %}?next=/home/">Logout</a>
+			</li>
+			{% else %}
+			<li>
+			<a href="{% url 'login' %}">Login</a>
+			</li>
+			<li>
+                        <a href="{% url 'register' %}">Register</a>
+			</li>
+		    {% endif %}
+			<li>
+                        <a href="{% url 'trends' %}">View Trends</a>
+			</li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
         </div>
     </nav>
-    
-        
+      
     <div id='head_page' class="intro-header">
         <div class="container">
             <div class="row">
@@ -48,56 +63,54 @@
     <div class="row">
       <div id="trends_title" "col-md-2 col-centered text-center"><h1>Trends</h1></div>
     </div>
-
-		<div id='topRated'>
-				<div class="col-lg-12">
-					<br>
-					<br>
-					<h2 id='parameter'>5 Top Rated Foods</h2>
-				</div>
-
-			<table id='ratings' class="table table-hover">
-				<thead>
-					<tr><th>Food</th><th>Rating</th><th>Restaurant</th>
+	<div id='topRated'>
+			<div class="col-lg-12">
+				<br>
+				<br>
+				<h2 id='parameter'>5 Top Rated Foods</h2>
+			</div>
+		<table id='ratings' class="table table-hover">
+			<thead>
+				<tr><th>Food</th><th>Rating</th><th>Restaurant</th>
+				</tr>
+			</thead>
+			<tbody>	
+				{% for food in foodRatings %}
+					<tr id="{{ food.id }}_row">
+					<td>{{ food.name }}</td>
+					<td id='score_{{ food.id }}'>{{ food.averageRating }}</td>
+					<td>{{ food.restaurant }}</td>
 					</tr>
-				</thead>
-				<tbody>	
-					{% for food in foodRatings %}
-						<tr id="{{ food.id }}_row">
-						<td>{{ food.name }}</td>
-						<td id='score_{{ food.id }}'>{{ food.averageRating }}</td>
-						<td>{{ food.restaurant }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-		
-		<div id='mostPopular'>
-				<div class="col-lg-12">
-					<br>
-					<br>
-					<h2 id='parameter'>5 Most Popular Restaurants</h2>
-				</div>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+	<div id='mostPopular'>
+			<div class="col-lg-12">
+				<br>
+				<br>
+				<h2 id='parameter'>5 Most Popular Restaurants</h2>
+			</div>
 
-			<table id='ratings' class="table table-hover">
-				<thead>
-					<tr><th>Restaurant</th><th>Likes</th><th>Tweets</th><th>Total</th>
+		<table id='ratings' class="table table-hover">
+			<thead>
+				<tr><th>Restaurant</th><th>Likes</th><th>Tweets</th><th>Total</th>
+				</tr>
+			</thead>
+			<tbody>	
+				{% for restaurant in mostPopular %}
+  
+					<tr id="{{ food.id }}_row">
+					<td>{{ restaurant.name }}</td>
+					<td id='score_{{ food.id }}'>{{ restaurant.totalLike }}</td>
+					<td>{{ restaurant.totalTweet }}</td>
+					<td>{{ restaurant.totalTweet|add:restaurant.totalLike }}</td>
 					</tr>
-				</thead>
-				<tbody>	
-					{% for restaurant in mostPopular %}
-	  
-						<tr id="{{ food.id }}_row">
-						<td>{{ restaurant.name }}</td>
-						<td id='score_{{ food.id }}'>{{ restaurant.totalLike }}</td>
-						<td>{{ restaurant.totalTweet }}</td>
-						<td>{{ restaurant.totalTweet|add:restaurant.totalLike }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 		
 	<script>
 
