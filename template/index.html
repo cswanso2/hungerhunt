@@ -215,8 +215,7 @@
 			     });
 			    
 			
-				$(".recommend").click(function(){
-					$(".recommend").click(function(){
+				$(".recommend").one('click', function(){
 					$.ajax({
 						type: "POST",
 						url: "/recommend/",
@@ -225,17 +224,13 @@
 							$("#head_page").hide();
 							pageToShow = "#" + response.restaurantName
 							pageToShow = pageToShow.toLowerCase()
-							alert(pageToShow)
 							$(pageToShow).show()
 							rowToShow = "#" + response.foodId.toString() + "_row"
 							$(rowToShow).css({ 'background-color' : 'red'});
 						}
 					});
-					
-					})
+					$(this).prop('disabled', true);
 				})
-		
-
 			})
 			
 			$(".downvote_button").click(function() {
