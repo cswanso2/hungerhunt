@@ -123,6 +123,10 @@ def recommend(request):
 				otherId = userKey
 	count = 5
 	otherList = userFoodRatings[otherId]
+
+	if otherId == -1:
+		return HttpResponse(json.dumps({'success': False}), content_type='application/json')
+
 	while count > 0:
 		food = getFood(otherList)
 		if food.id not in userList:

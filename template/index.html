@@ -219,12 +219,20 @@
 						url: "/recommend/",
 						data: {csrfmiddlewaretoken:'{% csrf_token %}' },
 						success: function(response){
-							$("#head_page").hide();
-							pageToShow = "#" + response.restaurantName
-							pageToShow = pageToShow.toLowerCase()
-							$(pageToShow).show()
-							rowToShow = "#" + response.foodId.toString() + "_row"
-							$(rowToShow).css({ 'background-color' : 'red'});
+							if(response.success)
+							{	
+								$("#head_page").hide();
+								pageToShow = "#" + response.restaurantName
+								pageToShow = pageToShow.toLowerCase()
+								dpageToShow = pageToShow.replace(/\s/g, '');
+								$(pageToShow).show()
+								rowToShow = "#" + response.foodId.toString() + "_row"
+								$(rowToShow).css({ 'background-color' : 'red'});
+							}
+							else
+							{
+								alert("Vote on more foods to get recommendations")
+							}
 						}
 					});
 					$(this).prop('disabled', true);
