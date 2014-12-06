@@ -14,6 +14,9 @@ import json
 import random
 import time
 
+import facebook
+
+
 @csrf_protect
 @ensure_csrf_cookie
 def register(request):
@@ -59,6 +62,9 @@ def foodNutrition(request):
 
 @ensure_csrf_cookie
 def trends(request):
+	graph = facebook.GraphAPI()
+	page = graph.get_object('6127898346')
+	print ('{} has {} likes.'.format(page['name'], page['likes']))
 	user = request.user
 	foodRatings = []
 	mostPopular = []

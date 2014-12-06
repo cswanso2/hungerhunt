@@ -143,6 +143,11 @@
 			{% endif %}
 			<a href="" class="btn-toolbar pull-right twitter-share-button {{ restaurant.name }}_twitter" data-text="I just checked out {{ restaurant.name }} on hungerhunt!"><i class="btn-toolbar pull-right twitter-share-button"></i> Tweet</a>
 			<br>
+			
+				<div id="fb-root"></div>
+				<a href='#' onclick="FacebookInviteFriends();"> 
+				Facebook Invite Friends Link
+				</a>
 		</div>
 	{% endfor %}
 	<div hidden id="addfood">
@@ -364,7 +369,13 @@
 	  
 	  
 	
-
+		function FacebookInviteFriends()
+		{
+		FB.ui({
+		method: 'apprequests',
+		message: 'Your Message diaolog'
+		});
+		}
 	</script>
 	
 	
