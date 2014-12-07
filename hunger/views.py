@@ -204,6 +204,7 @@ def friendRecommend(request):
 				friendsRestaurants.append((friendId, friendName, restaurants[facebookId]))
 				print facebookId
 
+
 	seed = random.randint(0, len(friendsRestaurants) - 1)
 	friendIdRestaurant, friendNameRestaurant, restaurant = friendsRestaurants[seed]
 	# see if any friends like any foods at the selected restaurant than recommend them
@@ -224,18 +225,21 @@ def friendRecommend(request):
 	food = foods[seed]
 	return HttpResponse(json.dumps({'success': True, 'restaurantName': restaurant.name, 'foodName': food.name, 'foodId': food.id, 'message': "{} thinks you should eat at {}, and you should eat {}".format(faceBookIdName[friendIdRestaurant], restaurant.name, food.name)}), content_type='application/json') 
 
-
+@csrf_exempt
 def facebookLogin(request):
-	print("testing ")
-	access_key = request.REQUEST['access_key']
-	print(access_key)
-	payload={'success':True}
-	return HttpResponse(json.dumps(payload), content_type='application/json')
+	user = request.user
+	facebookId = request.request['FacebookId']
+	facebookToken = request.request['Token']
+	#see if user already exists
+	facebookUser = list(FacebookUser.objects.raw("SELECT * FROM hunger_facebookUser WHERE user_id = {}".format(user.id)))
+	if len(facebookUser) == 0:
+		cursor = connection.cursor()
+		cursor.execute("INSERT INTO hunger_socialstat (user_id, access_token, facebook_id) VALUES ({},{},'{}');".format(user.id, facebookToken, facebookId))
+		payload = {'success': True}
+		return HttpResponse(json.dumps(payload), content_type='application/json')
+	return HttpResponse(json.dumps(payLoad), content_type='application/json')
 
 
-in url:
-
-url(r'^facebookLogin/', hungerViews.facebookLogin, name='facebookLogin'),
 
 @csrf_exempt
 def delete(request):
