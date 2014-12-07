@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.context_processors import csrf
-from hunger.models import Restaurant, Food, Nutrition, FoodRating, SocialStat
+from hunger.models import Restaurant, Food, Nutrition, FoodRating, SocialStat, FacebookUser
 from forms import UserForm, FoodNutritionForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie, csrf_exempt
@@ -13,8 +13,9 @@ from bisect import bisect
 import json
 import random
 import time
-
 import facebook
+import urllib
+
 
 
 @csrf_protect
@@ -62,9 +63,30 @@ def foodNutrition(request):
 
 @ensure_csrf_cookie
 def trends(request):
-	graph = facebook.GraphAPI()
-	page = graph.get_object('6127898346')
-	print ('{} has {} likes.'.format(page['name'], page['likes']))
+	token = "CAACEdEose0cBABXbOlAJDiJiE2eoMTDOBOYeiWIiZAXkOeeg9CP3HwQBt0BqVr5jRpRhdpYJNsmDWCFP0e2YffkkfbVcZBP2ZAuHh2byhF2PsOEZAwG63TdHc0po2SRuvaEuVMVO520lZCNKQtQWNzcmW7NHnTisC6SZBO3vZBNCVn6Tt27ATbKEzeNKr1k0JiDxnjVZC3qjDGVNhb99tJfL" 
+	graph = facebook.GraphAPI(token)
+	profile = graph.get_object("me")
+	print profile
+	import urllib
+
+	"""
+	query = '''SELECT page_id, name FROM page WHERE page_id IN
+	(SELECT page_id FROM page_fan WHERE uid IN
+	(SELECT uid1, uid2 from friend WHERE uid1 = "661954353872802")
+	)
+	access_token=CAAHEkWuMfVABAH0ol3LOW3RP5m4rXkbfctVaZCaJGvcBXMNyrrjazZAPuA0ZBCNoVn5p310qH51y39ChUYgtvTAJUArhl8A7W3EI8p9EbWNmVESV0ZAFYZCsXQcaNRDbIotVLFoEZAZCspZBmJVuZAsMEOaySGzRXcUcvtjYEWUxJWnWTNoXdz9UGvatevD2amjbFXE8AeiYMDYnfleKVeiTo
+	'''
+
+	print(query) 
+
+	query = urllib.quote(query)
+	print(query) 
+	
+	url = "https://graph.facebook.com/fql?q=" + query
+	data = urllib.urlopen(url).read()
+
+	print(data)
+	"""
 	user = request.user
 	foodRatings = []
 	mostPopular = []
@@ -79,6 +101,7 @@ def trends(request):
 	tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
 	for ratingObject in FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE time >= '{}' AND time <= '{}' ORDER BY rating DESC LIMIT 5".format(now, tomorrow)):
 		popularToday.append(ratingObject)
+
 	return render_to_response("trends.html", {'foodRatings': foodRatings, 'mostPopular':mostPopular, 'user':user, 'popularToday':popularToday})
 
 def getShared(userList, otherList):
@@ -106,7 +129,8 @@ def recommend(request):
 	user = request.user
 	foodRatings = []
 	for rating in FoodRating.objects.raw("SELECT * FROM hunger_foodrating"):
-		foodRatings.append(rating)
+		if(rating.rating > 0):
+			foodRatings.append(rating)
 	userFoodRatings = {}
 	for rating in foodRatings:
 		tempUser = rating.user
@@ -146,6 +170,72 @@ def recommend(request):
 	foodName = food.name
 	payload = {'success': True, 'restaurantName': restaurantName, 'foodName': foodName, 'foodId': food.id}
 	return HttpResponse(json.dumps(payload), content_type='application/json')
+
+
+def friendRecommend(request):
+	token = "CAACEdEose0cBAPZAcTqvK8PTSf0v2ZAZAKvRHL8PQ9NhfJ07hQwIGPq4Qm0ZC6wEUzsdXq221Fj0O0QgzonVpcC4GmAMTjODmOVHZC91ImMJ9L6VqkZAFCx9H92bZCA0fmFOz12PGpCZB0ZCWVqboqA1KLZCaa7thvs5J1c19ZBDSu2bfKpwmR1ZAZCOZCmbY8S0ubl5npiv1JBOZBd0jdGaZAe41Unc" 
+	graph = facebook.GraphAPI(token)
+	profile = graph.get_object("me")
+	restaurants = {} #map from facebook page id to restaurant
+	faceBookIdName ={}
+	for restaurant in Restaurant.objects.raw("SELECT * FROM hunger_restaurant"):
+		print restaurant
+		restaurants[restaurant.facebookId] = restaurant
+	friends = graph.get_connections("me", "friends")
+	friendsUserIds = []
+
+	friendsRestaurants = []
+	for friend in friends['data']:
+		friendId = friend['id']
+		friendName = friend['name']
+		faceBookIdName[friendId] = friendName
+		facebookUser = list(FacebookUser.objects.raw("SELECT * FROM hunger_facebookUser WHERE facebook_id = {}".format(friendId)))
+		if len(facebookUser) > 0:
+			friendsUserIds.append((facebookUser[0].user_id, friendId))
+			print 'hey' #put a list of facebook users here.
+		query = """
+		SELECT page_id, name FROM page WHERE page_id IN
+		(SELECT page_id FROM page_fan WHERE uid = {})
+		""".format(friendId)
+		url = 'https://graph.facebook.com/fql?q=' + query + "&access_token=" + token
+		likes = urllib.urlopen(url).read()
+		for facebookId in restaurants:
+			if facebookId in likes:
+				friendsRestaurants.append((friendId, friendName, restaurants[facebookId]))
+				print facebookId
+
+	seed = random.randint(0, len(friendsRestaurants) - 1)
+	friendIdRestaurant, friendNameRestaurant, restaurant = friendsRestaurants[seed]
+	# see if any friends like any foods at the selected restaurant than recommend them
+	foodsToRecommend = []
+	for userId, facebookFriendId in friendsUserIds:
+		FoodRatings = list(FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE user_id = {} AND food_id = {}".format(user.id, food.id)))
+		for rating in foodRatings:
+			if ratings.food.restaurant.id == restaurant.id:
+				foodsToRecommend.append( (ratings.food, facebookFriendId ) )
+	#recommend a friends food
+	if( len(foodsToRecommend) > 0 ):
+		seed = random.randint(0, len(friendsRestaurants) - 1)
+		food, facebookFriendIdFood = foodsToRecommend[seed]
+		return HttpResponse(json.dumps({'success': True, 'restaurantName': restaurant.name, 'foodName': food.name, 'foodId': food.id, 'message': "{} thinks you should eat at {}, and {} favorite thing there is {}".format(faceBookIdName[friendIdRestaurant], restaurant.name, faceBookIdName[facebookFriendIdFood], food.name)}), content_type='application/json') 
+	#otherwise recommend
+	foods = list(Food.objects.raw("SELECT * FROM hunger_food WHERE restaurant_id = {}".format(restaurant.id)))
+	seed = random.randint(0, len(foods) - 1)
+	food = foods[seed]
+	return HttpResponse(json.dumps({'success': True, 'restaurantName': restaurant.name, 'foodName': food.name, 'foodId': food.id, 'message': "{} thinks you should eat at {}, and you should eat {}".format(faceBookIdName[friendIdRestaurant], restaurant.name, food.name)}), content_type='application/json') 
+
+
+def facebookLogin(request):
+	print("testing ")
+	access_key = request.REQUEST['access_key']
+	print(access_key)
+	payload={'success':True}
+	return HttpResponse(json.dumps(payload), content_type='application/json')
+
+
+in url:
+
+url(r'^facebookLogin/', hungerViews.facebookLogin, name='facebookLogin'),
 
 @csrf_exempt
 def delete(request):

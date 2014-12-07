@@ -4,12 +4,12 @@
     <title>Hunger Hunt Login</title>
     <meta charset="utf-8" />
         {% load static %}
-	
-	{% block static %}
-		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="{% static 'hunger\css\bootstrap.css' %}">
-		<link href="{% static 'hunger\css\register.css' %}" rel="stylesheet">
-	{% endblock %}
+  
+  {% block static %}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'hunger\css\bootstrap.css' %}">
+    <link href="{% static 'hunger\css\register.css' %}" rel="stylesheet">
+  {% endblock %}
   </head>
 
   <body>
@@ -55,10 +55,13 @@
 <input type="hidden" name="next" value="/home/" />
 <input type="submit" value="Login"/>
 <div id="fb"><h4>Or Login with Facebook</h4></div>
-        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+        <fb:login-button id="fb_login" scope="public_profile,email" onlogin="checkLoginState();">
         </fb:login-button>
         
         <div id="status">
+        </div>
+        <div>
+        <a id='fbLogOut' href="http://localhost:8000/home" onclick="FB.logout();">Logout</a>
         </div>
 </form>
 
@@ -66,6 +69,7 @@
 
 </body>
 <script>
+    var logged_in;
   // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
     console.log('statusChangeCallback');
@@ -76,6 +80,7 @@
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
+      console.log("before testapi")
       testAPI();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
@@ -93,11 +98,14 @@
   // Button.  See the onlogin handler attached to it in the sample
   // code below.
   function checkLoginState() {
+    logged_in = true;
     FB.getLoginStatus(function(response) {
       statusChangeCallback(response);
     });
   }
 
+
+  var global_url = ""
   window.fbAsyncInit = function() {
   FB.init({
     appId      : '497603830381904',
@@ -125,6 +133,14 @@
 
   };
 
+  $('#fbLogOut').click(function(e){ 
+     e.preventDefault();
+      FB.logout(function(response) {
+            // user is now logged out
+            logged_in = false;
+            window.location= '/home/';})
+        });
+      
   // Load the SDK asynchronously
   (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
@@ -137,14 +153,30 @@
   // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
   function testAPI() {
+          
+          $.ajax({
+          type: "POST",
+          url: "/facebookLogin/",
+          data: {access_key: 'TEST', type: 'tweet'},
+          success: function(response){
+            
+          }
+        });
+      
+    
+    
+    
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
       document.getElementById('status').innerHTML =
         'Thanks for logging in, ' + response.name + '!';
+
     });
   }
-    
+
+  
+
 </script>
 
 <style>

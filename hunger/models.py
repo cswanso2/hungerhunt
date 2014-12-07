@@ -17,8 +17,15 @@ class Restaurant(models.Model):
 	picture = models.CharField(max_length = 120)
 	totalTweet = models.IntegerField(default=0)
 	totalLike = models.IntegerField(default=0)
+	facebookId = models.CharField(max_length=120,null=True)
 	def __str__(self):
 		return self.name
+
+class FacebookUser(models.Model):
+	user = models.ForeignKey(User)
+	access_token = models.CharField(max_length=1000)
+	facebook_id = models.BigIntegerField(default = 0)
+
 
 class Food(models.Model):
         restaurant = models.ForeignKey(Restaurant)
