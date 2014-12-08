@@ -87,11 +87,12 @@
                                 </form>
                                 <div class="tfclear"></div>
                             </div>
-			<h4>Get a recommended food item based on your likes</h4>
 			{% if user.is_authenticated %} 
+			<h4>Get a recommended food item based on your likes</h4>
 			<button type="button" class="recommend btn btn-default center-block" id="recommendButton">Recommend a food item</button>
                         {% endif %}
 			<br>
+			<button type="button" id="fb_recommend" class="btn btn-default center-block">Get a recommendation from your facebook friends</button>
                     </div>
                 </div>
             </div> <!-- row div -->
@@ -145,9 +146,6 @@
 			<br>
 			
 				<div id="fb-root"></div>
-				<a href='#' onclick="FacebookInviteFriends();"> 
-				Facebook Invite Friends Link
-				</a>
 		</div>
 	{% endfor %}
 	<div hidden id="addfood">
@@ -266,6 +264,32 @@
 			});
 		
 
+		$("#fb_recommend").click(function(e){
+					$.ajax({
+						type: "POST",
+						url: "/friend/",
+						data: {csrfmiddlewaretoken:'{% csrf_token %}' },
+						success: function(response){
+							if(response.success)
+							{	
+								$("#head_page").hide();
+								pageToShow = "#" + response.restaurantName
+								pageToShow = pageToShow.toLowerCase()
+								dpageToShow = pageToShow.replace(/\s/g, '');
+								$(pageToShow).show()
+								rowToShow = "#" + response.foodId.toString() + "_row"
+								$(rowToShow).css({ 'background-color' : 'red'});
+								alert(response.message)
+							}
+							else
+							{
+								alert("Vote on more foods to get recommendations")
+							}
+						}
+					});
+					$(this).prop('disabled', true);
+		});
+		
 		$("#submit_arrow").click(function( event ) {
 			console.log('it got here')
 			$("#head_page").hide();
@@ -322,26 +346,6 @@
 		  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));
-	      
-	      /**
-	      //twitter tweet 
-		!function(d,s,id){
-		  var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-		  if(!d.getElementById(id)){
-			  js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
-			  fjs.parentNode.insertBefore(js,fjs);
-			  }
-		  }(document, 'script', 'twitter-wjs');
-		
-		//twitter follow
-		!function(d,s,id){
-			var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-			if(!d.getElementById(id)){js=d.createElement(s);
-			js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
-			fjs.parentNode.insertBefore(js,fjs);
-			}
-		}(document, 'script', 'twitter-wjs');
-		**/
 	      
 	      function reward_user(event) {
 			if (event){

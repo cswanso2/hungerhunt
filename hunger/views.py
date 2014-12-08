@@ -68,25 +68,6 @@ def trends(request):
 	profile = graph.get_object("me")
 	print profile
 	import urllib
-
-	"""
-	query = '''SELECT page_id, name FROM page WHERE page_id IN
-	(SELECT page_id FROM page_fan WHERE uid IN
-	(SELECT uid1, uid2 from friend WHERE uid1 = "661954353872802")
-	)
-	access_token=CAAHEkWuMfVABAH0ol3LOW3RP5m4rXkbfctVaZCaJGvcBXMNyrrjazZAPuA0ZBCNoVn5p310qH51y39ChUYgtvTAJUArhl8A7W3EI8p9EbWNmVESV0ZAFYZCsXQcaNRDbIotVLFoEZAZCspZBmJVuZAsMEOaySGzRXcUcvtjYEWUxJWnWTNoXdz9UGvatevD2amjbFXE8AeiYMDYnfleKVeiTo
-	'''
-
-	print(query) 
-
-	query = urllib.quote(query)
-	print(query) 
-	
-	url = "https://graph.facebook.com/fql?q=" + query
-	data = urllib.urlopen(url).read()
-
-	print(data)
-	"""
 	user = request.user
 	foodRatings = []
 	mostPopular = []
@@ -171,7 +152,7 @@ def recommend(request):
 	payload = {'success': True, 'restaurantName': restaurantName, 'foodName': foodName, 'foodId': food.id}
 	return HttpResponse(json.dumps(payload), content_type='application/json')
 
-
+@csrf_exempt
 def friendRecommend(request):
 	token = "CAACEdEose0cBALJngqcdCocYLQtDXMNli01bZAeoWcJsfvstaqW4F3QxrfXHPe2wluhkXQZBPY7Sx1vqQ4fKV59cslU9T8Krby752ifzF3k0mZBZC9j9PfsKTVmnfhk9rdcXPdNoeYvYilNJaipIZBnsiphoAZCCJnZAvDkZCtQSTJlLcZCjQf2VNGq5tgmzGZC39wWYipjGQuYenv3rUnIXLT"
 	print token
