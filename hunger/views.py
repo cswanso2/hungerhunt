@@ -63,11 +63,6 @@ def foodNutrition(request):
 
 @ensure_csrf_cookie
 def trends(request):
-	token = "CAACEdEose0cBABXbOlAJDiJiE2eoMTDOBOYeiWIiZAXkOeeg9CP3HwQBt0BqVr5jRpRhdpYJNsmDWCFP0e2YffkkfbVcZBP2ZAuHh2byhF2PsOEZAwG63TdHc0po2SRuvaEuVMVO520lZCNKQtQWNzcmW7NHnTisC6SZBO3vZBNCVn6Tt27ATbKEzeNKr1k0JiDxnjVZC3qjDGVNhb99tJfL" 
-	graph = facebook.GraphAPI(token)
-	profile = graph.get_object("me")
-	print profile
-	import urllib
 	user = request.user
 	foodRatings = []
 	mostPopular = []
