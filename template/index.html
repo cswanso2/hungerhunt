@@ -92,7 +92,9 @@
 			<button type="button" class="recommend btn btn-default center-block" id="recommendButton">Recommend a food item</button>
                         {% endif %}
 			<br>
+			{% if facebookUser %}
 			<button type="button" id="fb_recommend" class="btn btn-default center-block">Get a recommendation from your facebook friends</button>
+			{% endif %}
                     </div>
                 </div>
             </div> <!-- row div -->

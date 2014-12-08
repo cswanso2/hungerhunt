@@ -288,6 +288,9 @@ def socialNetworkingUpdate(request):
 
 def hunger(request):
 	restaurants = []
+	facebookUser = False
+	if request.user.is_authenticated():
+		facebookUser = len(list(FacebookUser.objects.raw("SELECT * FROM hunger_facebookuser WHERE user_id = {}".format(request.user.id)))) > 0
 	for restaurant in Restaurant.objects.raw("SELECT * FROM hunger_restaurant"):
 		restaurants.append(restaurant)
 	restaurantFoodNutrition = {}
@@ -304,4 +307,4 @@ def hunger(request):
 			nutrition = Nutrition.objects.raw(query)[0]
 			foodNutrition[food] = nutrition
 		restaurantFoodNutrition[restaurant] = foodNutrition
-	return render_to_response('index.html', {'restaurantFoodNutrition': restaurantFoodNutrition, 'user': user})
+	return render_to_response('index.html', {'restaurantFoodNutrition': restaurantFoodNutrition, 'user': user, 'facebookUser': facebookUser})
