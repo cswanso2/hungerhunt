@@ -54,22 +54,13 @@
 <p><label for="id_password">Password:</label>{{ form.password }}</p>
 <input type="hidden" name="next" value="/home/" />
 <input type="submit" value="Login"/>
-<div id="fb"><h4>Or Login with Facebook</h4></div>
-        <fb:login-button id="fb_login" scope="public_profile,email" onlogin="checkLoginState();">
-        </fb:login-button>
-        
-        <div id="status">
-        </div>
-        <div>
-        <a id='fbLogOut' href="http://localhost:8000/home" onclick="FB.logout();">Logout</a>
-        </div>
 </form>
 
 
 
 </body>
 <script>
-    var logged_in;
+    var logged_in = false;
     var access_token;
     var fb_id;
   // This is called with the results from from FB.getLoginStatus().
@@ -158,7 +149,6 @@
   // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
   function testAPI() {
-          
           $.ajax({
           type: "POST",
           url: "/facebookLogin/",
