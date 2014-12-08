@@ -173,7 +173,8 @@ def recommend(request):
 
 
 def friendRecommend(request):
-	token = "CAACEdEose0cBAPZAcTqvK8PTSf0v2ZAZAKvRHL8PQ9NhfJ07hQwIGPq4Qm0ZC6wEUzsdXq221Fj0O0QgzonVpcC4GmAMTjODmOVHZC91ImMJ9L6VqkZAFCx9H92bZCA0fmFOz12PGpCZB0ZCWVqboqA1KLZCaa7thvs5J1c19ZBDSu2bfKpwmR1ZAZCOZCmbY8S0ubl5npiv1JBOZBd0jdGaZAe41Unc" 
+	token = "CAACEdEose0cBALJngqcdCocYLQtDXMNli01bZAeoWcJsfvstaqW4F3QxrfXHPe2wluhkXQZBPY7Sx1vqQ4fKV59cslU9T8Krby752ifzF3k0mZBZC9j9PfsKTVmnfhk9rdcXPdNoeYvYilNJaipIZBnsiphoAZCCJnZAvDkZCtQSTJlLcZCjQf2VNGq5tgmzGZC39wWYipjGQuYenv3rUnIXLT"
+	print token
 	graph = facebook.GraphAPI(token)
 	profile = graph.get_object("me")
 	restaurants = {} #map from facebook page id to restaurant
@@ -182,14 +183,18 @@ def friendRecommend(request):
 		print restaurant
 		restaurants[restaurant.facebookId] = restaurant
 	friends = graph.get_connections("me", "friends")
+	print friends
 	friendsUserIds = []
+
 
 	friendsRestaurants = []
 	for friend in friends['data']:
 		friendId = friend['id']
 		friendName = friend['name']
 		faceBookIdName[friendId] = friendName
-		facebookUser = list(FacebookUser.objects.raw("SELECT * FROM hunger_facebookUser WHERE facebook_id = {}".format(friendId)))
+		print friendId
+		facebookUser = list(FacebookUser.objects.raw("SELECT * FROM hunger_facebookuser WHERE facebook_id = {}".format(friendId)))
+		print facebookUser
 		if len(facebookUser) > 0:
 			friendsUserIds.append((facebookUser[0].user_id, friendId))
 			print 'hey' #put a list of facebook users here.
@@ -210,6 +215,7 @@ def friendRecommend(request):
 	# see if any friends like any foods at the selected restaurant than recommend them
 	foodsToRecommend = []
 	for userId, facebookFriendId in friendsUserIds:
+		print "hey"
 		FoodRatings = list(FoodRating.objects.raw("SELECT * FROM hunger_foodrating WHERE user_id = {} AND food_id = {}".format(user.id, food.id)))
 		for rating in foodRatings:
 			if ratings.food.restaurant.id == restaurant.id:
@@ -228,15 +234,18 @@ def friendRecommend(request):
 @csrf_exempt
 def facebookLogin(request):
 	user = request.user
-	facebookId = request.request['FacebookId']
-	facebookToken = request.request['Token']
+	facebookId = request.REQUEST['FacebookId']
+	print(type(facebookId))
+	facebookToken = request.REQUEST['Token']
 	#see if user already exists
 	facebookUser = list(FacebookUser.objects.raw("SELECT * FROM hunger_facebookUser WHERE user_id = {}".format(user.id)))
-	if len(facebookUser) == 0:
-		cursor = connection.cursor()
-		cursor.execute("INSERT INTO hunger_socialstat (user_id, access_token, facebook_id) VALUES ({},{},'{}');".format(user.id, facebookToken, facebookId))
-		payload = {'success': True}
-		return HttpResponse(json.dumps(payload), content_type='application/json')
+	print "past here"
+	cursor = connection.cursor()
+	print "adding"
+	cursor.execute("INSERT INTO hunger_facebookuser (user_id, access_token, facebook_id) VALUES ({},'{}',{});".format(user.id, facebookToken, facebookId))
+	payload = {'success': True}
+	return HttpResponse(json.dumps(payload), content_type='application/json')
+	payload ={'success': False}
 	return HttpResponse(json.dumps(payLoad), content_type='application/json')
 
 
